@@ -16,7 +16,7 @@ The entire litigation, from the first ex parte interdict to the fabricated finan
 2.  **Manufacture Incapacity:** Systematically create the appearance that Daniel Faucitt is incapable of managing his affairs.
 3.  **Apply for Curatorship:** Use the manufactured evidence to have a curator appointed over Daniel's estate.
 4.  **Seize Assets:** As Trustee and Curator (or through a proxy), seize control of the Trust assets.
-5.  **Eliminate Debt:** Forgive his own ZAR 18.685M debt.
+5.  **Eliminate Debt:** Forgive his own R18.685M debt.
 
 **The Actors:**
 
@@ -42,7 +42,7 @@ This is not litigation. This is **organized crime disguised as legal proceedings
 | **4. Business Isolation** | Sequential interdicts, bank freezes, CEO removal | Isolate Dan & Jax from business | 3 interdict applications (Aug, Oct, Nov 2025) |
 | **5. Dependency** | Forced medical testing, financial control | Create dependency, medical evidence | Psychologist report, bank freezes |
 | **6. Delinquency** | Contact bans, communication restrictions | Complete isolation, prove "incapacity" | 3rd interdict application (Nov 2025) |
-| **7. Curatorship** | High Court application (planned 2026) | Seize assets, eliminate ZAR 18.685M debt | All of the above |
+| **7. Curatorship** | High Court application (planned 2026) | Seize assets, eliminate R18.685M debt | All of the above |
 
 ---
 
@@ -108,7 +108,7 @@ Bantjies' strategy is a **textbook case of manufacturing the grounds for a curat
 
 ## 5. The Financial Endgame: Debt Elimination
 
-**The ZAR 18.685M debt is the key.**
+**The R18.685M debt is the key.**
 
 Once a curator is appointed (Bantjies or a proxy), they will have the legal authority to:
 
@@ -135,7 +135,7 @@ Once a curator is appointed (Bantjies or a proxy), they will have the legal auth
 
 **The case is not Peter vs. Daniel. It is Bantjies vs. The Faucitt Family Trust.**
 
-Every action taken by Peter and Rynette must be viewed through the lens of this curatorship conspiracy. The interdicts, the fabricated accounts, the medical testing—it's all part of a **single, coordinated plan to seize control of the Trust assets and eliminate an ZAR 18.685M debt**.
+Every action taken by Peter and Rynette must be viewed through the lens of this curatorship conspiracy. The interdicts, the fabricated accounts, the medical testing—it's all part of a **single, coordinated plan to seize control of the Trust assets and eliminate a R18.685M debt**.
 
 **The legal strategy must now shift from defense to offense:**
 

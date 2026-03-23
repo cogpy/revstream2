@@ -194,7 +194,7 @@ The Shopify invoices prove that the e-commerce platform generating revenue for R
 - Platform fee transfers UK → ZA were **blocked**.
 - RWD ZA has had **no independent revenue stream** since July 2023.
 - RWD ZA has been trading **insolvent for 2+ years**.
-- **ZAR 60M in fraudulent tax returns** have been filed.
+- **R60M in fraudulent tax returns** have been filed.
 
 **The Applicant questioned the legitimacy of IT expenses but failed to question the legitimacy of the revenue income. The revenue does not belong to RWD ZA—it belongs to RegimA Zone Ltd (UK).**
 

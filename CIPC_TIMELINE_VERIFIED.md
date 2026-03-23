@@ -122,7 +122,7 @@ Rynette Farrar Bantjies instructed De Novo accountants to:
 
 **Income Tax Act, Section 75: Tax Fraud**
 - Filing false tax returns: **200% penalty + criminal prosecution**
-- ZAR 60M in fraudulent revenue reported: **Massive tax liability**
+- R60M in fraudulent revenue reported: **Massive tax liability**
 
 ### Common Law Fraud
 
@@ -131,7 +131,7 @@ Rynette Farrar Bantjies instructed De Novo accountants to:
 2. **Knowledge of falsity:** ✅ Rynette instructed De Novo to fabricate
 3. **Intent to defraud:** ✅ Concealing true financial position
 4. **Reliance:** ✅ SARS, CIPC, creditors relied on false statements
-5. **Damages:** ✅ ZAR 60M in fraudulent tax returns
+5. **Damages:** ✅ R60M in fraudulent tax returns
 
 ---
 
@@ -193,7 +193,7 @@ Rynette Farrar Bantjies instructed De Novo accountants to:
 
 1. **Criminal complaint to SAPS:** Companies Act s 214 violations
 2. **Report to CIPC:** False filings and deregistration request
-3. **Report to SARS:** Tax fraud (ZAR 60M in false returns)
+3. **Report to SARS:** Tax fraud (R60M in false returns)
 4. **Civil claim:** Damages for fraud and misrepresentation
 
 ### Evidence Preservation
