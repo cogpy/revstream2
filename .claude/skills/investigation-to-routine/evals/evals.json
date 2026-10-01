@@ -1,0 +1,87 @@
+{
+  "skill_name": "investigation-to-routine",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I've been running a third-party vendor security review for our fintech for about six weeks across a bunch of sessions. We've gone through everything we have access to \u2014 SOC2 reports in `compliance/vendors/`, the questionnaire responses in `compliance/questionnaires/`, all the contract PDFs. What's left is basically: three vendors haven't sent their updated pen-test reports, our legal team hasn't confirmed the DPA status for two EU vendors, and Okta needs to give us the SSO audit log export. Every time I open a new session the context gets huge re-reading everything and I end up re-checking stuff I already checked. Can you turn this into something that just runs on its own and picks up when the missing docs show up?",
+      "expected_output": "Recognises the phase change (corpus exhausted, all gaps external), does NOT re-search, produces: an exhaustion enumeration of the compliance directories, a gap table with observable unblock conditions and named holders (vendors, legal, Okta), a rolling state file under 120 lines, a hardened GitHub Actions workflow with gate/iterate split + loop guard + self-termination, and a note in the project instructions that this is now a routine.",
+      "files": [],
+      "expectations": [
+        "Produces a rolling state file (markdown) that is 120 lines or fewer",
+        "State file contains a status marker line on its own line whose value can be set to COMPLETE to stop the routine",
+        "State file contains a gap table where every row names the party who must act to unblock it (a third party or the project owner \u2014 never the routine/agent itself)",
+        "Every gap row's unblock condition is observable by the routine (a file path, env var, or repository signal), not 'when they reply'",
+        "Produces a CI workflow file (YAML) with a scheduled trigger AND at least one non-clock trigger (workflow_dispatch, push, or repository_dispatch)",
+        "Workflow has a cheap gate step that checks the status marker before any agent/iteration job runs",
+        "Workflow contains a loop guard: routine commits carry a marker and pushes carrying it are skipped",
+        "Commit message is read via env: and not interpolated into the run: script body (no ${{ github.event.head_commit.message }} inside run:)",
+        "Workflow YAML parses with a strict loader and has no duplicate keys",
+        "Iteration prompt tells the fresh session to read only the state file (plus recent log), not the project history, and to rewrite the state file last",
+        "Standing rules include 'passed/verified items are never re-checked' or equivalent 'never re-search exhausted material'",
+        "Project instructions (CLAUDE.md or equivalent) are updated to record that the work is now a routine and point at the state file",
+        "Response does NOT propose new searches of the corpus declared exhausted (re-checking held primaries in a verification queue is permitted, and must not contradict the standing rules)",
+        "Gap table lists the three pen-test reports, the two EU DPAs, and the Okta SSO export as separate rows with holders vendor / legal / Okta",
+        "Standing rules include a rule derived from the review-log's retracted 'datadog has no DPA' mistake (check contract appendices / primaries before negative findings)",
+        "A human push to the trigger paths actually leads to an iteration: either the agent action runs from push, or the gate relays the push into a repository_dispatch (not merely logging that push cannot iterate)",
+        "RESPONSE.md accurately describes the delivered artifacts (verification-queue item count, file names, and trigger behaviour match what was built)",
+        "Exhaustion classification is by identity (specific file/path/hash cited), not by a count claim or a name-substring match"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "so this has been going on for weeks. we're migrating the old Postgres reporting db to the new warehouse and I've been verifying table by table. the verification scripts are in scripts/verify/ and results land in reports/migration/. at this point 41 of 47 tables reconcile. the remaining 6 are blocked \u2014 3 need the old vendor to send us their archived partition dumps (they said 'next week' three weeks ago), 2 need the finance team to confirm which of two conflicting source-of-truth spreadsheets is right, and 1 (the events table) needs a Kafka replay that only the platform team can trigger. my sessions keep hitting context limits and honestly I keep re-running verifications on tables that already passed. make this a durable thing please, it should notice when a partition dump lands in data/incoming/ and just deal with it",
+      "expected_output": "Produces a state file with the 6 blocked tables as a gap table (each with holder: vendor / finance / platform team and an observable unblock condition such as a file appearing in data/incoming/), a standing rule that passed tables are never re-verified, a workflow with a push trigger on data/incoming/ plus repository_dispatch for the Kafka replay case, a self-termination marker for when all 47 reconcile, and a project-instructions note. Does not propose re-verifying the 41 passed tables.",
+      "files": [],
+      "expectations": [
+        "Produces a rolling state file (markdown) that is 120 lines or fewer",
+        "State file contains a status marker line on its own line whose value can be set to COMPLETE to stop the routine",
+        "State file contains a gap table where every row names the party who must act to unblock it (a third party or the project owner \u2014 never the routine/agent itself)",
+        "Every gap row's unblock condition is observable by the routine (a file path, env var, or repository signal), not 'when they reply'",
+        "Produces a CI workflow file (YAML) with a scheduled trigger AND at least one non-clock trigger (workflow_dispatch, push, or repository_dispatch)",
+        "Workflow has a cheap gate step that checks the status marker before any agent/iteration job runs",
+        "Workflow contains a loop guard: routine commits carry a marker and pushes carrying it are skipped",
+        "Commit message is read via env: and not interpolated into the run: script body (no ${{ github.event.head_commit.message }} inside run:)",
+        "Workflow YAML parses with a strict loader and has no duplicate keys",
+        "Iteration prompt tells the fresh session to read only the state file (plus recent log), not the project history, and to rewrite the state file last",
+        "Standing rules include 'passed/verified items are never re-checked' or equivalent 'never re-search exhausted material'",
+        "Project instructions (CLAUDE.md or equivalent) are updated to record that the work is now a routine and point at the state file",
+        "Response does NOT propose new searches of the corpus declared exhausted (re-checking held primaries in a verification queue is permitted, and must not contradict the standing rules)",
+        "Workflow has a push trigger scoped to data/incoming/ paths",
+        "Workflow (or state file) provides a repository_dispatch route for the Kafka replay / finance confirmation cases that do not produce a file",
+        "State file lists exactly the 6 blocked tables as gap rows with holders vendor / finance / platform team",
+        "Self-termination condition is tied to all 47 tables reconciling",
+        "Response does not propose re-verifying the 41 passed tables",
+        "A human push to the trigger paths actually leads to an iteration: either the agent action runs from push, or the gate relays the push into a repository_dispatch (not merely logging that push cannot iterate)",
+        "RESPONSE.md accurately describes the delivered artifacts (verification-queue item count, file names, and trigger behaviour match what was built)",
+        "Exhaustion classification is by identity (specific file/path/hash cited), not by a count claim or a name-substring match"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I have a stop hook on this session with the goal 'complete the literature review on transformer interpretability methods' and it keeps firing telling me the review isn't complete. It's right that it isn't \u2014 but I've gone through every paper in refs/ and every arxiv search I can think of. What's actually left is 4 papers behind paywalls I've requested via our library (they take 2-3 weeks), 2 preprints where I emailed the authors for the code, and one dataset that needs IRB sign-off before I can even look at it. The hook is just going to keep looping. What do I do?",
+      "expected_output": "Identifies the looping stop-hook on an unsatisfiable-from-here goal as the clearest signal to convert. Explains that the goal cannot be completed from inside the environment and that a routine is the right mechanism. Produces gap table (library requests / author emails / IRB \u2014 each with holder and observable unblock condition like a PDF appearing in refs/incoming/), state file, workflow, and advises recording in project instructions that the review is now a routine so the hook's premise is addressed rather than fought. Does not attempt more arxiv searches.",
+      "files": [],
+      "expectations": [
+        "Produces a rolling state file (markdown) that is 120 lines or fewer",
+        "State file contains a status marker line on its own line whose value can be set to COMPLETE to stop the routine",
+        "State file contains a gap table where every row names the party who must act to unblock it (a third party or the project owner \u2014 never the routine/agent itself)",
+        "Every gap row's unblock condition is observable by the routine (a file path, env var, or repository signal), not 'when they reply'",
+        "Produces a CI workflow file (YAML) with a scheduled trigger AND at least one non-clock trigger (workflow_dispatch, push, or repository_dispatch)",
+        "Workflow has a cheap gate step that checks the status marker before any agent/iteration job runs",
+        "Workflow contains a loop guard: routine commits carry a marker and pushes carrying it are skipped",
+        "Commit message is read via env: and not interpolated into the run: script body (no ${{ github.event.head_commit.message }} inside run:)",
+        "Workflow YAML parses with a strict loader and has no duplicate keys",
+        "Iteration prompt tells the fresh session to read only the state file (plus recent log), not the project history, and to rewrite the state file last",
+        "Standing rules include 'passed/verified items are never re-checked' or equivalent 'never re-search exhausted material'",
+        "Project instructions (CLAUDE.md or equivalent) are updated to record that the work is now a routine and point at the state file",
+        "Response does NOT propose new searches of the corpus declared exhausted (re-checking held primaries in a verification queue is permitted, and must not contradict the standing rules)",
+        "Response explains that the stop-hook goal cannot be satisfied from inside the environment and that a routine addresses the hook's premise rather than fighting it",
+        "Gap table has rows for the 4 library requests, 2 author code requests, and 1 IRB approval with observable unblock conditions (e.g. PDF in refs/incoming/)",
+        "Response does not attempt or propose additional arxiv/web searches",
+        "A human push to the trigger paths actually leads to an iteration: either the agent action runs from push, or the gate relays the push into a repository_dispatch (not merely logging that push cannot iterate)",
+        "RESPONSE.md accurately describes the delivered artifacts (verification-queue item count, file names, and trigger behaviour match what was built)",
+        "Exhaustion classification is by identity (specific file/path/hash cited), not by a count claim or a name-substring match"
+      ]
+    }
+  ]
+}

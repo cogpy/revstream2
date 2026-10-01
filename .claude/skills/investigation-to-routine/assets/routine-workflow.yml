@@ -1,0 +1,211 @@
+name: {{ROUTINE_NAME}}
+
+# Durable iterative routine.
+#
+# Each run is a FRESH agent session that reads {{STATE_FILE}}, performs exactly one
+# unit of work, and rewrites that state file as its last act. Continuity lives in the
+# state file, not in any chat session, so context stays bounded and the routine survives
+# indefinitely.
+#
+# SELF-TERMINATION: the routine stops firing once {{STATE_FILE}} contains the line
+#   {{STATUS_MARKER}}: COMPLETE
+# Set that marker when every gap is closed, or to pause the routine.
+#
+# TEMPLATE PLACEHOLDERS — replace every {{...}} before committing:
+#   {{ROUTINE_NAME}}     workflow display name
+#   {{STATE_FILE}}       path to the rolling state file
+#   {{STATUS_MARKER}}    the status key grepped for COMPLETE (e.g. AUDIT_CYCLE_STATUS)
+#   {{MARKER}}           literal commit-message tag for the loop guard (e.g. [bom-routine])
+#   {{CRON}}             5-field cron, off-peak minute (not :00 / :30)
+#   {{DISPATCH_TYPE}}    repository_dispatch event type (e.g. bom-input-arrived)
+#   {{TRIGGER_PATHS}}    YAML list of paths whose push should wake the routine
+#   {{BRANCH}}           branch the routine commits to
+#   {{CONCURRENCY_GROUP}} unique group name
+#   {{ITERATION_PROMPT}} the domain-specific gates — see references/workflow.md
+#   {{OPTIONAL_SECRET_*}} any credentials the credentials-gate needs (or delete the env block)
+#
+# CAUTION — YAML block scalars: never place a comment (or anything) at a lower
+# indentation than the block's content inside a `run: |` or `prompt: |`. Doing so ends
+# the scalar early, orphans the following lines, and makes GitHub reject the whole file
+# before scheduling any job. That exact defect once killed every run for weeks while
+# reporting nothing. Validate with a strict YAML loader and demand one green run with a
+# spawned job before trusting the schedule.
+
+on:
+  # 1. Clock — the baseline sweep.
+  schedule:
+    - cron: "{{CRON}}"
+
+  # 2. Manual.
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Run even if {{STATUS_MARKER}} is COMPLETE"
+        type: boolean
+        default: false
+
+  # 3. New input landing on {{BRANCH}}. Loop-guarded in the gate job: the routine tags
+  #    its own commits "{{MARKER}}" and skips them. Some agent actions reject a `push`
+  #    context outright ("Unsupported event type: push"), so the gate RELAYS a human push
+  #    into trigger 4 (a repository_dispatch fired with GITHUB_TOKEN does start a run) and
+  #    exits. The push therefore still produces an iteration within a minute — just via a
+  #    second run — and the state file's "reacts to a push" claim stays true.
+  push:
+    branches: [{{BRANCH}}]
+    paths:
+      {{TRIGGER_PATHS}}
+
+  # 4. External signal — fire from anywhere with no commit, e.g. when an input arrives
+  #    by another channel:
+  #      curl -X POST -H "Accept: application/vnd.github+json" \
+  #        -H "Authorization: Bearer $GH_TOKEN" \
+  #        https://api.github.com/repos/{{OWNER}}/{{REPO}}/dispatches \
+  #        -d '{"event_type":"{{DISPATCH_TYPE}}"}'
+  repository_dispatch:
+    types: [{{DISPATCH_TYPE}}]
+
+permissions:
+  contents: write
+  pull-requests: write
+  # Some agent actions exchange an OIDC token for a GitHub App token and fail with
+  # "Could not fetch an OIDC token" without this. Supplying github_token explicitly in
+  # the iterate step (below) sidesteps the exchange; keeping both makes it work either way.
+  id-token: write
+
+concurrency:
+  group: {{CONCURRENCY_GROUP}}
+  cancel-in-progress: false   # never interrupt an iteration mid-write
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - id: check
+        name: Check status marker and loop guard
+        env:
+          # Without a model credential the iteration cannot do any work; skip with a
+          # warning rather than failing red on every trigger.
+          MODEL_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Read the commit message through env, never interpolated into the script
+          # body — a commit message is untrusted input and inlining it into `run:` is a
+          # shell-injection vector.
+          HEAD_MSG: ${{ github.event.head_commit.message }}
+          EVENT: ${{ github.event_name }}
+          FORCE: ${{ inputs.force }}
+          # Token for the push→dispatch relay below. Any further workflow_dispatch inputs
+          # you add must also come in through env, never ${{ inputs.* }} inside run:.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          STATE="{{STATE_FILE}}"
+
+          if [ -z "$MODEL_KEY" ]; then
+            echo "::warning::ANTHROPIC_API_KEY is not set — skipping this iteration."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          if [ ! -f "$STATE" ]; then
+            echo "State file missing — nothing to iterate against."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          # Loop guard: the routine writes to the same paths that trigger it.
+          case "$EVENT:$HEAD_MSG" in
+            push:*"{{MARKER}}"*)
+              echo "Push originated from the routine's own commit — skipping to avoid a loop."
+              echo "proceed=false" >> "$GITHUB_OUTPUT"; exit 0 ;;
+          esac
+
+          # Some agent actions cannot run from a push context. Remove this block if
+          # yours can. Otherwise RELAY the push into trigger 4 so the input is still
+          # acted on now rather than at the next clock tick. GITHUB_TOKEN-created
+          # repository_dispatch events DO start workflow runs (needs contents: write).
+          if [ "$EVENT" = "push" ]; then
+            echo "Human push on trigger paths — relaying into repository_dispatch ({{DISPATCH_TYPE}})."
+            if gh api "repos/$GITHUB_REPOSITORY/dispatches" \
+                 -f event_type="{{DISPATCH_TYPE}}" \
+                 -f 'client_payload[source]=push' \
+                 -f "client_payload[sha]=$GITHUB_SHA"; then
+              echo "Relayed; the dispatch run will iterate."
+            else
+              echo "::warning::Relay failed — send the {{DISPATCH_TYPE}} repository_dispatch manually to react to this input now."
+            fi
+            echo "proceed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          if grep -qE '^{{STATUS_MARKER}}:[[:space:]]*COMPLETE' "$STATE" \
+             && [ "$FORCE" != "true" ]; then
+            echo "Cycle marked COMPLETE — routine dormant. Re-run with force=true to override."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          echo "Triggered by: $EVENT"
+          echo "proceed=true" >> "$GITHUB_OUTPUT"
+
+  iterate:
+    needs: gate
+    if: needs.gate.outputs.proceed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - name: Run iteration
+        # Pin to a released major; an unattended routine benefits from a fixed runner.
+        uses: anthropics/claude-code-action@v1
+        env:
+          # Optional credentials the credentials-gate checks for. Read-only principals
+          # only. Delete this block if the routine needs none.
+          {{OPTIONAL_SECRET_A}}: ${{ secrets.{{OPTIONAL_SECRET_A}} }}
+          {{OPTIONAL_SECRET_B}}: ${{ secrets.{{OPTIONAL_SECRET_B}} }}
+        with:
+          # Explicit token so the action uses the workflow's own credential instead of
+          # an OIDC exchange.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: "--max-turns 60"
+          prompt: |
+            {{ROUTINE_NAME}} iteration.
+
+            CONTINUITY CONTRACT: Read ONLY {{STATE_FILE}} plus `git log --oneline -10`.
+            Do NOT read the project's investigation history or the corpus up front; the
+            state file links deep references — open a specific one only when the step you
+            choose requires it. Your LAST action is to rewrite {{STATE_FILE}} (<=120
+            lines: grip table, gap table, verification queue, standing rules, iteration
+            log trimmed to the last 5 entries). Preserve the `{{STATUS_MARKER}}:` line
+            verbatim.
+
+            DO EXACTLY ONE UNIT OF WORK — the first unblocked step below, then stop:
+
+            {{ITERATION_PROMPT}}
+            (Typical shape, in priority order:
+             1. CREDENTIALS GATE — if the optional secrets are set, do the retrieval work
+                they unlock, in bounded tranches. Read-only. Never echo, log, or commit
+                credential values.
+             2. NEW-INPUT GATE — check whether any gap's "unblocks when" condition in the
+                state file is now true. If so: ingest with a content hash recorded,
+                cross-check against the existing findings, update every affected document
+                AT SOURCE with superseded text retained.
+             3. VERIFICATION QUEUE — if both gates are blocked, take the TOP unchecked
+                item and resolve it against per-document primaries. Never re-search
+                corpora the closure record marks as exhausted — a new finding requires a
+                new input, not a new query.)
+
+            STANDING RULES (all mandatory; each traces to a finding that was published and
+            retracted — the state file lists them and the rules reference explains why):
+            follow every numbered rule in the state file's Standing rules section.
+
+            FINISH: if substantive work was done — commit on branch {{BRANCH}} (restart it
+            from origin/main if its prior PR merged), push, and open a DRAFT pull request.
+            If nothing was unblocked, update only the state file's iteration log with a
+            one-line "no-op — blocked on all gaps" entry, commit and push that single
+            change, and open no PR.
+
+            COMMIT TAG (required): every commit message you make in this routine must
+            contain the literal marker {{MARKER}}. The workflow triggers on pushes to the
+            paths this routine writes, and the gate uses that marker to skip pushes the
+            routine itself produced. Omitting it causes an infinite trigger loop.
