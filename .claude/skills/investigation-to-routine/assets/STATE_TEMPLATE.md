@@ -31,7 +31,7 @@ set that when every gap closes, or to pause. Preserve that line verbatim on ever
 
 | # | Gap | Unblocks when (must be observable by the routine) | Holder |
 |---|---|---|---|
-| 1 | {{GAP}} | {{FILE_APPEARS / ENV_VAR_SET / ...}} | {{PARTY}} |
+| 1 | {{GAP}} | {{FILE_APPEARS / ENV_VAR_SET / ...}} — if credential-gated, also record progress here (e.g. "retrieved 0 of 48") so the gate closes when done | {{PARTY}} |
 | 2 | {{GAP}} | {{...}} | {{PARTY}} |
 
 ## Verification queue (work when all gaps blocked — one item per iteration; held primaries only, never a re-search; must not contradict the standing rules)
