@@ -3,9 +3,11 @@
 **Scope:** {{SCOPE}} | **Last iteration:** {{DATE}} ({{SESSION_OR_RUN_ID}})
 {{STATUS_MARKER}}: ACTIVE
 
-**Contract:** every iteration reads THIS file first and rewrites it LAST. Keep it under
-~120 lines. Do not re-read session history or the full corpus — deep references are linked
-below; load one only when the step you have chosen requires it.
+**Contract:** every iteration reads THIS file first and rewrites it LAST, carrying every
+section forward (including "Credential-gated retrieval" and its unchecked item, which only
+gate 1 may change). Keep it under ~120 lines. Do not re-read session history or the full
+corpus — deep references are linked below; load one only when the step you have chosen
+requires it.
 
 **Runner:** `{{WORKFLOW_PATH}}`, fresh session per run. Fires on: daily {{CRON_HUMAN}} ·
 manual `workflow_dispatch` (with `force` to override a COMPLETE marker) · push to `main`
