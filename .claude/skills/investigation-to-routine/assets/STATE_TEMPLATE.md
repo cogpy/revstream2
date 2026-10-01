@@ -44,7 +44,7 @@ set that when every gap closes, or to pause. Preserve that line verbatim on ever
 0. Anything already marked verified / passed / summarised is NEVER re-verified. The verification queue holds only checks against held primaries that were never done.
 1. Negative findings ("X never happened") → re-run against per-document PRIMARIES, never an index/aggregate.
 2. Extract metadata that doesn't chain with neighbours → re-read the source document.
-3. Cite evidence by content identity (hash / message id / decoded content), never analyst filename.
+3. Cite evidence by content identity (hash / message ID / decoded content), never analyst filename.
 4. Declare a corpus exhausted only after mechanical enumeration.
 5. Floors get one-sided `+x%` sensitivity, never `±x%`.
 6. Derived / reconstructed data is a map to sources, not a source; never cite it directly.

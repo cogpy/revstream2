@@ -25,7 +25,7 @@ longer into a referenced document and link it. If you find yourself needing more
 
 ### Header block
 
-```
+```text
 # <Routine name> — Rolling State
 **Scope:** <case / project> | **Last iteration:** <date> (<session or run id>)
 <STATUS_MARKER>: ACTIVE

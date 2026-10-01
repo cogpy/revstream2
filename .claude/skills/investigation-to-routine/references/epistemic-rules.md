@@ -27,7 +27,7 @@ Procedure:
    every account, every folder). Do this with a script, not by hand.
 2. **Cross-reference against your own citations — by identity.** Take the full text of
    everything the investigation has written and check which enumerated locations are
-   *never mentioned*. Match on the thing itself (path, hash, message id, account number),
+   *never mentioned*. Match on the thing itself (path, hash, message ID, account number),
    not on a name substring: "the review log mentions Datadog" does not cover
    `datadog-soc2-2025.pdf`, and "12 papers fully summarised" is a count, not a list of
    which twelve. A cross-reference that reports zero unexamined because every vendor name
