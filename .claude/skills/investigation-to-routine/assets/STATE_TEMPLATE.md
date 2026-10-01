@@ -3,9 +3,11 @@
 **Scope:** {{SCOPE}} | **Last iteration:** {{DATE}} ({{SESSION_OR_RUN_ID}})
 {{STATUS_MARKER}}: ACTIVE
 
-**Contract:** every iteration reads THIS file first and rewrites it LAST. Keep it under
-~120 lines. Do not re-read session history or the full corpus — deep references are linked
-below; load one only when the step you have chosen requires it.
+**Contract:** every iteration reads THIS file first and rewrites it LAST, carrying every
+section forward (including "Credential-gated retrieval" and its unchecked item, which only
+gate 1 may change). Keep it under ~120 lines. Do not re-read session history or the full
+corpus — deep references are linked below; load one only when the step you have chosen
+requires it.
 
 **Runner:** `{{WORKFLOW_PATH}}`, fresh session per run. Fires on: daily {{CRON_HUMAN}} ·
 manual `workflow_dispatch` (with `force` to override a COMPLETE marker) · push to `main`
@@ -31,12 +33,15 @@ set that when every gap closes, or to pause. Preserve that line verbatim on ever
 
 | # | Gap | Unblocks when (must be observable by the routine) | Holder |
 |---|---|---|---|
-| 1 | {{GAP}} | {{FILE_APPEARS / ENV_VAR_SET / ...}} — if credential-gated, ALSO keep an unchecked item in the queue below (see its first line) | {{PARTY}} |
+| 1 | {{GAP}} | {{FILE_APPEARS / ENV_VAR_SET / ...}} — if credential-gated, ALSO keep an unchecked item in the "Credential-gated retrieval" section below | {{PARTY}} |
 | 2 | {{GAP}} | {{...}} | {{PARTY}} |
 
-## Verification queue (work when all gaps blocked — one item per iteration; held primaries only, never a re-search; must not contradict the standing rules)
+## Credential-gated retrieval (gate 1 ONLY — never worked as a verification item; delete this section if no gap is credential-gated)
 
-- [ ] {{CREDENTIAL-GATED RETRIEVAL, if any: "retrieve <what> 0 of N" — keep this unchecked and update the count each tranche; the runner skips scheduled runs when no `- [ ]` item exists anywhere in this file}}
+- [ ] {{"retrieve <what> 0 of N" — keep unchecked and update the count each tranche; tick only when nothing remains. The runner's gate keeps scheduled runs alive while any `- [ ]` exists anywhere in this file, so this line is what keeps the routine awake for retrieval. Gate 3 must skip it: when the secrets are unset this item simply waits.}}
+
+## Verification queue (gate 3 — work when gates 1 and 2 are closed; one item per iteration; held primaries only, never a re-search; must not contradict the standing rules)
+
 - [ ] {{ITEM — a verification against primaries, or analysis of held-but-unanalysed material}}
 - [ ] {{ITEM}}
 
