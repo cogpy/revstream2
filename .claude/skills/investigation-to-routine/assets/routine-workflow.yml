@@ -19,7 +19,7 @@ name: {{ROUTINE_NAME}}
 #   {{CRON}}             5-field cron, off-peak minute (not :00 / :30)
 #   {{DISPATCH_TYPE}}    repository_dispatch event type (e.g. bom-input-arrived)
 #   {{TRIGGER_PATHS}}    YAML list of paths whose push should wake the routine
-#   {{BRANCH}}           branch the routine commits to
+#   {{BRANCH}}           working branch the routine commits to (push trigger watches main)
 #   {{CONCURRENCY_GROUP}} unique group name
 #   {{ITERATION_PROMPT}} the domain-specific gates — see references/workflow.md
 #   {{OPTIONAL_SECRET_*}} any credentials the credentials-gate needs (or delete the env block)
@@ -44,14 +44,16 @@ on:
         type: boolean
         default: false
 
-  # 3. New input landing on {{BRANCH}}. Loop-guarded in the gate job: the routine tags
-  #    its own commits "{{MARKER}}" and skips them. Some agent actions reject a `push`
-  #    context outright ("Unsupported event type: push"), so the gate RELAYS a human push
-  #    into trigger 4 (a repository_dispatch fired with GITHUB_TOKEN does start a run) and
-  #    exits. The push therefore still produces an iteration within a minute — just via a
-  #    second run — and the state file's "reacts to a push" claim stays true.
+  # 3. New input landing on main (the default branch — not {{BRANCH}}, which is the
+  #    working branch the iterate job commits to). Loop-guarded in the gate job: the
+  #    routine tags its own commits "{{MARKER}}" and skips them. Some agent actions
+  #    reject a `push` context outright ("Unsupported event type: push"), so the gate
+  #    RELAYS a human push into trigger 4 (a repository_dispatch fired with GITHUB_TOKEN
+  #    does start a run) and exits. The push therefore still produces an iteration
+  #    within a minute — just via a second run — and the state file's "reacts to a push"
+  #    claim stays true.
   push:
-    branches: [{{BRANCH}}]
+    branches: [main]
     paths:
       {{TRIGGER_PATHS}}
 
