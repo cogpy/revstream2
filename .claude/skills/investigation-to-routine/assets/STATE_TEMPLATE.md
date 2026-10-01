@@ -31,11 +31,12 @@ set that when every gap closes, or to pause. Preserve that line verbatim on ever
 
 | # | Gap | Unblocks when (must be observable by the routine) | Holder |
 |---|---|---|---|
-| 1 | {{GAP}} | {{FILE_APPEARS / ENV_VAR_SET / ...}} — if credential-gated, also record progress here (e.g. "retrieved 0 of 48") so the gate closes when done | {{PARTY}} |
+| 1 | {{GAP}} | {{FILE_APPEARS / ENV_VAR_SET / ...}} — if credential-gated, ALSO keep an unchecked item in the queue below (see its first line) | {{PARTY}} |
 | 2 | {{GAP}} | {{...}} | {{PARTY}} |
 
 ## Verification queue (work when all gaps blocked — one item per iteration; held primaries only, never a re-search; must not contradict the standing rules)
 
+- [ ] {{CREDENTIAL-GATED RETRIEVAL, if any: "retrieve <what> 0 of N" — keep this unchecked and update the count each tranche; the runner skips scheduled runs when no `- [ ]` item exists anywhere in this file}}
 - [ ] {{ITEM — a verification against primaries, or analysis of held-but-unanalysed material}}
 - [ ] {{ITEM}}
 

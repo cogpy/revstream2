@@ -12,12 +12,16 @@ name: {{ROUTINE_NAME}}
 # Set that marker when every gap is closed, or to pause the routine.
 #
 # COST OF A NO-OP: an iteration that finds nothing to do still costs an agent session.
-# The gate therefore skips SCHEDULED runs when the state file has no unchecked
-# verification item (`- [ ]`) AND the optional input detector reports nothing new; manual
-# and dispatch runs always proceed. Supply {{INPUT_DETECTOR}} (a script exiting non-zero
-# when a gap's unblock condition is now true) to make that skip reliable; without it, a
-# scheduled run with an empty queue is skipped on the queue test alone, and inputs that
-# arrive outside a push must be announced via trigger 4.
+# The gate therefore skips SCHEDULED runs when the state file has no unchecked item
+# (`- [ ]`) anywhere AND the optional input detector reports nothing new; manual and
+# dispatch runs always proceed. The `- [ ]` test is the ONLY thing that keeps a scheduled
+# run alive, so EVERY kind of outstanding work the routine itself can do must be written
+# as an unchecked item: verification-queue entries AND credential-gated retrieval
+# tranches ("- [ ] retrieve BOMs 0 of 48"). A credential-gated gap whose progress is
+# recorded only in prose will be skipped forever. Supply {{INPUT_DETECTOR}} (a script
+# exiting non-zero when a gap's unblock condition is now true) to make the skip reliable;
+# without it, a scheduled run with no unchecked item is skipped on that test alone, and
+# inputs that arrive outside a push must be announced via trigger 4.
 #
 # BRANCH: {{BRANCH}} should be the repository's default branch. repository_dispatch runs
 # always start on the default branch; the gate forwards the pushed SHA in
@@ -165,16 +169,18 @@ jobs:
             echo "proceed=false" >> "$GITHUB_OUTPUT"; exit 0
           fi
 
-          # Cheap no-op skip (schedule only): nothing queued and nothing new arrived.
-          # DETECTOR must exit non-zero when a gap's unblock condition is observably true.
+          # Cheap no-op skip (schedule only): no unchecked `- [ ]` item anywhere in the
+          # state file (verification queue OR credential-gated retrieval tranches) and
+          # nothing new arrived. DETECTOR must exit non-zero when a gap's unblock
+          # condition is observably true.
           if [ "$EVENT" = "schedule" ]; then
             DETECTOR="{{INPUT_DETECTOR}}"
             if ! grep -q '^- \[ \]' "$STATE"; then
               if [ -x "$DETECTOR" ] && "$DETECTOR"; then
-                echo "Scheduled run: verification queue empty and detector reports no new input — skipping agent run."
+                echo "Scheduled run: no unchecked item in the state file and detector reports no new input — skipping agent run."
                 echo "proceed=false" >> "$GITHUB_OUTPUT"; exit 0
               elif [ ! -x "$DETECTOR" ]; then
-                echo "Scheduled run: verification queue empty and no detector configured — skipping agent run (announce arriving inputs via {{DISPATCH_TYPE}})."
+                echo "Scheduled run: no unchecked item in the state file and no detector configured — skipping agent run (announce arriving inputs via {{DISPATCH_TYPE}})."
                 echo "proceed=false" >> "$GITHUB_OUTPUT"; exit 0
               fi
             fi
@@ -231,13 +237,15 @@ jobs:
             {{ITERATION_PROMPT}}
             (Typical shape, in priority order:
              1. CREDENTIALS GATE — open only when BOTH hold: the optional secrets are
-                set AND the state file's gap table still records retrieval work as
-                outstanding for them (a tranche counter, a "retrieved N of M" line, or an
-                unchecked retrieval item). Do the next bounded tranche, record it in the
-                state file, and mark the gap closed when nothing remains — a set secret
-                with no outstanding work does NOT open this gate, so later runs fall
-                through to the new-input gate. Read-only. Never echo, log, or commit
-                credential values.
+                set AND the state file carries an UNCHECKED retrieval item for them
+                ("- [ ] retrieve <what> N of M"). That checkbox form is mandatory, not a
+                style choice: the runner's gate keeps scheduled runs alive only while
+                some `- [ ]` item exists, so retrieval progress recorded in prose would
+                silence the routine. Do the next bounded tranche, update the item's
+                count, and tick it (`- [x]`) when nothing remains — a set secret with no
+                unchecked item does NOT open this gate, so later runs fall through to
+                the new-input gate. Read-only. Never echo, log, or commit credential
+                values.
              2. NEW-INPUT GATE — check whether any gap's "unblocks when" condition in the
                 state file is now true. If so: ingest with a content hash recorded,
                 cross-check against the existing findings, update every affected document
