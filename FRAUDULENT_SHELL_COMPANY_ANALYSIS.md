@@ -11,7 +11,7 @@
 The Shopify invoices from 2023-2024 prove that **RegimA Worldwide Distribution (RWD ZA) has been operating as a fraudulent shell company since July 13, 2023** (the date of Kayla Faucitt's murder). The evidence shows:
 
 - **No Independent Revenue Stream:** The Shopify platform generating all revenue is **owned and paid for by RegimA Zone Ltd (UK)**, Daniel Faucitt's UK company.
-- **Trading While Insolvent:** RWD ZA has been trading for 2+ years without a legitimate revenue stream, while reporting ZAR 60 million in revenue.
+- **Trading While Insolvent:** RWD ZA has been trading for 2+ years without a legitimate revenue stream, while reporting R60 million in revenue.
 - **Fraudulent Tax Returns:** RWD ZA has filed fraudulent tax returns for 2+ years, claiming revenue that belongs to a separate UK entity.
 - **Projection of Guilt:** Peter Faucitt's claims of "financial mismanagement" and questioning of IT expenses are a **projection of his own and Rynette Farrar Bantjies' fraudulent activities**.
 
@@ -103,7 +103,7 @@ A sample invoice (Bill #182424713) shows:
     - RWD ZA continued producing invoices based on a platform it did not own.
     - RWD ZA had **no independent revenue stream**.
     - RWD ZA was **trading while insolvent**.
-    - **ZAR 60 million in fraudulent tax returns** were filed.
+    - **R60 million in fraudulent tax returns** were filed.
 
 ---
 
