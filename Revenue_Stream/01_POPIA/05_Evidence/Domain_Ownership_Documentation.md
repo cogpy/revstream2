@@ -326,9 +326,9 @@ domain_restoration_plan:
 5. Issue corrective communications to all contacts"
 
 #### Damages Claim
-- Loss of domain value: R 500,000+
-- Lost revenue: R 150,000 per month
-- Remediation costs: R 250,000
+- Loss of domain value: R500,000+
+- Lost revenue: R150,000 per month
+- Remediation costs: R250,000
 - Reputational damage: To be quantified
 
 #### Ongoing Compliance
