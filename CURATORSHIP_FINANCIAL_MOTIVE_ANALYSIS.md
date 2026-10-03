@@ -138,7 +138,7 @@ A person may be declared incapable of managing their affairs if:
 **Outcome:**
 - Curator gains control of Dan's affairs
 - Curator controls Trust assets (as Trustee)
-- Bantjies eliminates ZAR 18.685M debt
+- Bantjies eliminates R18.685M debt
 - Pete & Jax dispossessed of Trust assets
 
 ---
@@ -156,7 +156,7 @@ A person may be declared incapable of managing their affairs if:
 
 **Method 1: Forgiveness**
 - Curator "forgives" Bantjies' debt as "in Dan's best interest"
-- ZAR 18.685M eliminated
+- R18.685M eliminated
 
 **Method 2: Asset Transfer**
 - Curator transfers Trust assets to Bantjies
@@ -172,7 +172,7 @@ A person may be declared incapable of managing their affairs if:
 
 **Pete & Jax:**
 - Lose Trust assets
-- Lose ZAR 18.685M debt repayment
+- Lose R18.685M debt repayment
 - Silenced by interdicts and curatorship
 
 **Dan & Jax:**
@@ -207,7 +207,7 @@ Bantjies has orchestrated a **multi-stage hostile takeover** using:
 - **Psychological warfare** (medical testing, isolation)
 - **Proxy actors** (Peter, Rynette, De Novo)
 
-**The goal:** Seize ZAR 18.685M+ in assets, eliminate debt, dispossess creditors.
+**The goal:** Seize R18.685M+ in assets, eliminate debt, dispossess creditors.
 
 **The method:** Curatorship through manufactured incapacity.
 

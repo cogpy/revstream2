@@ -60,7 +60,7 @@ The entire conspiracy is framed under the guise of **"protecting the assets"** o
 -   The medical testing is framed as "concern for wellbeing."
 -   The curatorship application will be framed as the only way to "protect the family" and "ensure the long-term stability of the assets."
 
-**In reality, it is the opposite:** the conspiracy is designed to **destroy the business, seize the assets, and eliminate a ZAR 18.685M debt.**
+**In reality, it is the opposite:** the conspiracy is designed to **destroy the business, seize the assets, and eliminate a R18.685M debt.**
 
 ---
 

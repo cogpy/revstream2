@@ -21,7 +21,7 @@ I, **Jacqueline Faucitt**, am an adult female residing at [address]. I am the Fi
 
 ### Para 2: Purpose of This Affidavit
 
-The purpose of this affidavit is to expose a **criminal conspiracy** orchestrated by **Bantjies** (the Applicant's father and a Trustee of the Faucitt Family Trust) to seize control of the Trust assets and eliminate his **ZAR 18.685 million debt** to the Applicant and myself.
+The purpose of this affidavit is to expose a **criminal conspiracy** orchestrated by **Bantjies** (the Applicant's father and a Trustee of the Faucitt Family Trust) to seize control of the Trust assets and eliminate his **R18.685 million debt** to the Applicant and myself.
 
 This is not a business dispute. This is a **hostile takeover disguised as litigation**.
 
@@ -37,7 +37,7 @@ The plan is as follows:
 4.  **Business Isolation** (August-November 2025): Sequential interdicts to isolate Daniel and myself from the business.
 5.  **Dependency** (August-October 2025): Forced medical testing to create medical evidence of incapacity.
 6.  **Delinquency** (November 2025): Complete communication ban to prove "incapacity."
-7.  **Curatorship** (Planned 2026): High Court application to appoint Bantjies (or a proxy) as curator, seize Trust assets, and eliminate the ZAR 18.685M debt.
+7.  **Curatorship** (Planned 2026): High Court application to appoint Bantjies (or a proxy) as curator, seize Trust assets, and eliminate the R18.685M debt.
 
 ### Para 4: The Financial Motive
 
@@ -146,7 +146,7 @@ The application will argue that Daniel is incapable of managing his affairs, bas
 Once a curator is appointed (Bantjies or a proxy), they will have the legal authority to:
 
 -   Seize control of the Trust assets.
--   "Forgive" Bantjies' ZAR 18.685M debt.
+-   "Forgive" Bantjies' R18.685M debt.
 -   Dispossess the Applicant and myself of our Trust assets.
 
 ### Para 13: The Proxy Actors
@@ -173,7 +173,7 @@ Since Kayla's death:
 -   Bantjies seized control of the Sage accounting system.
 -   Rynette blocked platform fee transfers from the UK to South Africa.
 -   RegimA Worldwide Distribution has been trading while insolvent for 2+ years.
--   **ZAR 60 million in fraudulent tax returns** have been filed.
+-   **R60 million in fraudulent tax returns** have been filed.
 
 The Applicant's claims of "financial mismanagement" are a **projection of Bantjies' and Rynette's own fraud**.
 
@@ -301,7 +301,7 @@ I pray that the Court rescind the first and second interdicts on the grounds of:
 
 I pray that the Court order the removal of Bantjies as a Trustee of the Faucitt Family Trust on the grounds of:
 
--   Conflict of interest (ZAR 18.685M debt).
+-   Conflict of interest (R18.685M debt).
 -   Breach of fiduciary duty (ignoring embezzlement reports).
 -   Participation in a criminal conspiracy.
 
@@ -311,7 +311,7 @@ I pray that the Court refer this matter to the National Prosecuting Authority fo
 
 -   Fraud (Companies Act section 214, common law).
 -   Perjury (false statements in affidavits).
--   Tax fraud (ZAR 60M fraudulent returns).
+-   Tax fraud (R60M fraudulent returns).
 -   Organized crime (POCA section 2).
 -   Torture (Torture Act section 3).
 
@@ -323,7 +323,7 @@ I pray that the Court refer this matter to the South African Human Rights Commis
 
 ## CONCLUSION
 
-This is not a business dispute. This is a **criminal conspiracy** to seize control of the Faucitt Family Trust assets and eliminate a ZAR 18.685 million debt through a manufactured curatorship application.
+This is not a business dispute. This is a **criminal conspiracy** to seize control of the Faucitt Family Trust assets and eliminate a R18.685 million debt through a manufactured curatorship application.
 
 The evidence is overwhelming, documented, and irrefutable. The Court is being used as a tool in a hostile takeover, and the Applicant is a pawn in a scheme orchestrated by Bantjies and Rynette.
 

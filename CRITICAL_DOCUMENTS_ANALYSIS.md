@@ -339,7 +339,7 @@ The five critical documents provide **devastating evidence** that completely val
 | **Timeline Manipulation** | June 6-7 (1 day) | Multiple sequences (1, 2, 5, 7 days) | **Ours more comprehensive** |
 | **R500k Fabrication** | Bank statements refute | R1.06M expenditures, card sabotage | **Ours more detailed** |
 | **Curatorship Conspiracy** | Not mentioned | **7-stage plan, May 2026 deadline** | **Ours adds critical insight** |
-| **Shell Company Fraud** | Not mentioned | **ZAR 60M fraudulent tax returns** | **Ours adds critical evidence** |
+| **Shell Company Fraud** | Not mentioned | **R60M fraudulent tax returns** | **Ours adds critical evidence** |
 | **Human Rights Violations** | Not mentioned | **Torture, protracted abuse** | **Ours adds legal framework** |
 
 **Strategic Implications:**
@@ -460,7 +460,7 @@ The five critical documents provide **devastating evidence** that completely val
 **Create V7 Answering Affidavit:**
 - Sections 1-12: Dan's comprehensive paragraph-by-paragraph responses
 - Section 13: Curatorship Conspiracy (7-stage plan, May 2026 deadline)
-- Section 14: Shell Company Fraud (ZAR 60M fraudulent tax returns)
+- Section 14: Shell Company Fraud (R60M fraudulent tax returns)
 - Section 15: Human Rights Violations (torture, protracted abuse)
 - Section 16: Counter-Application (rescission, delinquency, criminal prosecution)
 - Section 17: Relief Sought

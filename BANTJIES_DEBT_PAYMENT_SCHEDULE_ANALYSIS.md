@@ -114,7 +114,7 @@ If the Company exercises the call option:
 
 ### 6.1. Original Understanding
 
-**Before this document:** We knew Bantjies owed "over ZAR 18 million" due in May 2026.
+**Before this document:** We knew Bantjies owed "over R18 million" due in May 2026.
 
 ### 6.2. Confirmed Evidence
 
