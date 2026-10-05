@@ -215,9 +215,9 @@ specific_losses:
 
 #### Operational Cost Increases
 - Manual processing costs: 5x increase
-- Error correction costs: R 25,000/month
-- Customer service overtime: R 40,000/month
-- Emergency courier costs: R 15,000/month
+- Error correction costs: R25,000/month
+- Customer service overtime: R40,000/month
+- Emergency courier costs: R15,000/month
 
 ### Banking Evidence
 - Continued deposits (business operating)
@@ -344,16 +344,16 @@ Criminal sanctions: Possible imprisonment
 ### Remediation Costs
 
 #### Immediate Costs
-- System restoration: R 150,000
-- Compliance remediation: R 300,000
-- Customer communication: R 50,000
-- Legal and professional: R 200,000
+- System restoration: R150,000
+- Compliance remediation: R300,000
+- Customer communication: R50,000
+- Legal and professional: R200,000
 
 #### Ongoing Costs
-- Rebuilding trust: R 100,000/month
-- Enhanced security: R 50,000/month
-- Compliance monitoring: R 30,000/month
-- Performance recovery: R 75,000/month
+- Rebuilding trust: R100,000/month
+- Enhanced security: R50,000/month
+- Compliance monitoring: R30,000/month
+- Performance recovery: R75,000/month
 
 ---
 

@@ -96,12 +96,12 @@ The court must order:
 
 ### 💰 Damage Assessment
 
-**Quantifiable Monthly Impact**: R 410,000+
-- Lost efficiency: R 125,000
-- Increased costs: R 85,000
-- Missed opportunities: R 200,000
+**Quantifiable Monthly Impact**: R410,000+
+- Lost efficiency: R125,000
+- Increased costs: R85,000
+- Missed opportunities: R200,000
 
-**Compliance Risk Exposure**: R 10,000,000+
+**Compliance Risk Exposure**: R10,000,000+
 - POPIA fines
 - Tax penalties
 - Director liability
