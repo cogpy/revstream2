@@ -13,14 +13,14 @@ Source: `ad-res-j7/docs/audit/FORENSIC_INVENTORY_MANUFACTURING_BOM_AUDIT_2026_07
 |---|---|---|
 | SUPP-ADDARORY (Addarory (Pty) Ltd) | SUPPLIER | R2.6M+ documented payments (Pastel/correspondence); ZERO bank trace in 76,098 txns — flag `settlement_channel_unknown` |
 | Coptis SAS | PLATFORM/SUPPLIER | Subscription contract N° 1105 (18 Aug 2015), €1,010/yr, 3 users, signed Jacqui Faucitt (RST CEO) |
-| Stock2Shop (Pty) Ltd | PLATFORM/SUPPLIER | 138+ invoices (7754 of 8 Dec 2017 → 39701 of 28 Jun 2025), R502,563.58 extracted set, all addressed to Peter Faucitt / RWW |
+| Stock2Shop (Pty) Ltd | PLATFORM/SUPPLIER | 138 invoices (true range 13619 → 39701, 8 Dec 2017 → 28 Jun 2025; ⛔ the earlier "7754" start was withdrawn as unverifiable, ad-res-j7 audit §10), R502,563.58 extracted set, all addressed to Peter Faucitt / RWW |
 | Sage South Africa (Pty) Ltd | SUPPLIER | Continuous 2016–2026; INV6008343 (4 Jul 2025): Pastel 5→10 users R20,750, order SO2059500 |
 
 ### Relation additions (Layer 3)
 
 - REL_OWN: Darren Dennis Farrar → Addarory (Pty) Ltd (director; Rynette admission 8 Oct 2024)
 - REL_SUPPLY: Addarory → SLG/RST (packaging + Guaiazulene; order SPO30431, 13 Feb 2025)
-- REL_STOCK: Addarory supply categories ↔ SLG disappeared stock categories
+- REL_STOCK: Addarory supply categories ↔ SLG ~~disappeared~~ written-off stock categories — ⛔ *2026-10-07: do not model the FY2025 write-off as physical disappearance; see Corrections §C1 below*
 
 ### Event additions (Layer 4 ET-DSM)
 
@@ -44,7 +44,7 @@ Source: `ad-res-j7/docs/audit/FORENSIC_INVENTORY_MANUFACTURING_BOM_AUDIT_2026_07
 
 - SLG Feb 2025 inventory adjustment, exact ledger figure: **R5,241,372.98** (P&L 2100/000, all inventory categories) — this is the single authoritative figure for the FY2025 event. **Do not additionally model the R1,443,217.78 (phantom opening finished goods) and R2,756,321.85 (impossible closing finished goods) figures as separate stocks/losses** — they are the balance-sheet Finished Goods (7700/000) component of this same event (their swing = R4,199,539.63), not additive amounts. A ~R1.04M residual (R5,241,372.98 − R4,199,539.63) falls on other inventory categories (raw materials/packaging/boxes/containers) not yet separately quantified. See `ad-res-j7/docs/strategic/STOCK_LOSS_SCHEDULE_2026_04_23.md` §1a for full reconciliation.
 - FY2020 RST manufacturing signature: finished goods R12,805,083.10; Manufacture Cost/Recovery R0.00; 8200/050 Prime Products raw materials **-R150,562.11**.
-- Multiple-books flag: SLG TB versions diverge FY2020 (R7.33M), FY2022 (R5.47M), FY2024 (3 irreconcilable versions incl. suspected ×1000 scale corruption of the R246,372 "R246k" entry, file dated 18 Feb 2024).
+- ~~Multiple-books flag: SLG TB versions diverge FY2020 (R7.33M), FY2022 (R5.47M), FY2024 (3 irreconcilable versions incl. suspected ×1000 scale corruption of the R246,372 "R246k" entry, file dated 18 Feb 2024).~~ ⛔ **Superseded 2026-10-07 — do not apply as written.** Re-derived from the source spreadsheets: the FY2020 R7.33M divergence does not exist (all four files identical on inventory; aggregate artefact); FY2022 R5.47M is unverified (no source held); FY2024 has **two** statements differing by a real retrospective restatement of **R936,873.05** (97% packaging), plus one working copy (18 Feb 2024, pre-year-end) to be excluded, with the ×1000 reading consistent-with but not proven. See Corrections §C2.
 
 ### Reconciliation with a parallel investigation branch (2026-07-21)
 
@@ -68,3 +68,53 @@ the wider entity model:
 - **Physical stock count claim scoped**: a genuine count exists for a separate UK "Salco"
   channel (23 Jul 2020–10 Nov 2021, favourable variance) — but SLG/RST's own SA warehouse stock
   (the entities central to this refinement file) still has no documented count located.
+
+---
+
+## Corrections (2026-10-07) — apply these in place of the superseded entries above
+
+Source: `ad-res-j7/docs/audit/PHANTOM_STOCK_ROOT_CAUSE_2026_09_08.md`, `…_ADDENDUM_2026_09_22.md`,
+`…_ADDENDUM2_2026_09_29.md`, and `ad-res-j7/docs/audit/BOM_INVESTIGATION_LEDGER.md` §2–§3.
+Every figure re-derived from the primary trial-balance xlsx files, not from any aggregate.
+
+### C1. The FY2025 write-off is a bookkeeping residue, not missing goods (model as such)
+
+- `2400/000 Manufacture Cost / Recovery` = R0.00 in every held SLG and RST trial balance,
+  FY2017–FY2025: the raw-materials→finished-goods conversion journal was never posted.
+- Consequence in the books: packaging accumulates (R5.78M FY2019 → R8,424,603.19 FY2025),
+  finished goods drains to a credit (R1,443,217.78 DR → R2,756,321.85 CR), and the FY2025
+  `2100/000` plug of R5,241,372.98 is **96.62% explained by ledger movements alone**
+  (FG collapse R4,199,539.63 + other inventory capitalised R1,219,150.81; residual R177,317.46).
+- ZONENT impact: EVENT_025/EVENT_028 and any `REL_STOCK` edge must carry
+  `nature: accounting_artefact_unposted_conversion`, not `physical_loss`. The R5.4M headline,
+  the R5,241,372.98 ledger figure and the R4.2M FG swing are one event measured three ways —
+  never summed (already noted at the 2026-07-22 entry; this makes it explicit for the edge type).
+- Physical control: raw materials at Prime (4 Aug 2025) value to R931,511.91 at count-quarter
+  list price and **reconcile** to book (R740,345.71 Feb 2025 / R970,881.11 Feb 2024).
+  Packaging (R8.42M) has no count anywhere — untested, not inferred either way.
+
+### C2. "Multiple books" — what survives
+
+| Claim as recorded above | Status | Replace with |
+|---|---|---|
+| FY2020 versions diverge R7.33M | **Refuted** | Four files identical on all inventory rows (Boxes 898,930.17); the 8,231,078 was the FY2019 inventory total read into the Boxes row by the extractor |
+| FY2022 R5.47M | **Unverified** | No FY2022 spreadsheet held; JSON-only; do not model |
+| FY2024 three irreconcilable versions | **Replaced** | Two statements, reconciling to the cent via a retrospective **−R936,873.05** write-down (R905,004.19 packaging); the 18 Feb 2024 file is a pre-year-end working copy — exclude, do not call it a version |
+| ×1000 scale corruption | **Hedged** | Consistent with, not proven; cite as "working copy, excluded" |
+
+### C3. New, verified, not yet in the model
+
+- **FY2025 TB in evidence does not foot** by R2,485,098.35, all in 5200/000 opening retained
+  income. Inventory rows unaffected; the file is a working document. Any FY2025 balance taken
+  into ZONENT must carry `source_status: working_document_unfooted` until the signed AFS/GL is held.
+- **FY2023 raw materials credit balance**: 7540/000 = −R8,570,989.06 in the earlier FY2024
+  file's comparative, +R429,010.94 in the issued one — a change of exactly R9,000,000.00 to a
+  closed year (8001/000 changed by exactly R1,100,000.00 in the same pair). The negative-asset
+  signature on raw materials two years before it appeared on finished goods. Weight limited by
+  the working-copy source; needs the FY2023 primary TB (ledger gap 18).
+
+### C4. Stock-count claim
+
+The blanket "no physical stock count ever performed" is **refuted** (counts by Prime Mar 2021,
+joint RegimA/Salco 1 Sep 2021, SOLO 8 Feb 2022; Salco is a South African logistics provider,
+not a UK channel). Do not attach a `no_count_ever` attribute to any SLG/RST inventory node.
