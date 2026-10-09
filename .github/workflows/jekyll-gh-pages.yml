@@ -25,21 +25,58 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    outputs:
+      pages_ready: ${{ steps.pages.outputs.ready }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      # configure-pages fails the job when no Pages site exists (HTTP 404) and
+      # enablement is false. Creating the site needs a token other than
+      # GITHUB_TOKEN, so a missing site must not fail the Jekyll build.
+      - name: Ensure GitHub Pages site
+        id: pages
+        env:
+          GH_TOKEN: ${{ secrets.PAGES_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          repo="${GITHUB_REPOSITORY}"
+          if gh api "repos/${repo}/pages" >/dev/null 2>&1; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          post_status=0
+          gh api --method POST "repos/${repo}/pages" -f build_type=workflow >/dev/null 2>/tmp/pages-enable.err || post_status=$?
+          # 201 created, or 409 if the site appeared between the GET and POST.
+          if [[ "$post_status" -eq 0 ]] || grep -q "409" /tmp/pages-enable.err; then
+            for _ in 1 2 3 4 5; do
+              if gh api "repos/${repo}/pages" >/dev/null 2>&1; then
+                echo "ready=true" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              sleep 2
+            done
+          fi
+          echo "ready=false" >> "$GITHUB_OUTPUT"
+          msg="$(tr '\n' ' ' < /tmp/pages-enable.err | cut -c1-300)"
+          echo "::notice title=GitHub Pages not enabled::Could not create the Pages site (${msg}). Jekyll will still build. Enable Pages with Source set to GitHub Actions, or set secrets.PAGES_TOKEN to a token that can manage Pages."
       - name: Setup Pages
+        if: steps.pages.outputs.ready == 'true'
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
+          token: ${{ secrets.PAGES_TOKEN || github.token }}
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./
           destination: ./_site
       - name: Upload artifact
+        if: steps.pages.outputs.ready == 'true'
         uses: actions/upload-pages-artifact@v3
 
   # Deployment job
   deploy:
+    if: needs.build.result == 'success' && needs.build.outputs.pages_ready == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
