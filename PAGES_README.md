@@ -84,7 +84,9 @@ evidence/
 
 ## 🚀 Deployment
 
-The site is automatically deployed when changes are pushed to the `main` branch:
+The Jekyll site is built on every push to the `main` branch. Publishing requires GitHub Pages to be enabled once with **Source: GitHub Actions** (Settings → Pages). The default `GITHUB_TOKEN` cannot create that Pages site; either enable it in repository settings, or set a `PAGES_TOKEN` secret (a PAT or GitHub App token that can manage Pages). Until then the build still runs and deployment is skipped.
+
+Once Pages is enabled:
 
 1. GitHub Actions runs the Jekyll build
 2. Site is built from markdown files
