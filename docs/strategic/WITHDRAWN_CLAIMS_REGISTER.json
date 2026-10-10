@@ -48,7 +48,7 @@
     },
     {
       "id": "ketoni-debt",
-      "pattern": "(?i)ketoni[^.\\n]{0,40}\\b(owes|owing)\\b|both ends of (the )?R18[.,]685",
+      "pattern": "(?i)ketoni[^.\\n]{0,40}\\b(owes|owing)\\b|both ends of (the )?R18[.,]685|ketoni[^.\\n]{0,40}(?<!not a )(?<!debt or )payout|R(18[.,]685|23[.,]165|28[.,]73)M?\\s+(Ketoni\\s+)?payout",
       "correction": "R18,685,000 is the year-1 call-option price on the FFT's 5,000 A shares: a contingent future obligation, not a debt or payout.",
       "withdrawn": "2026-08-02",
       "source": "docs/strategic/NEW_RECORDS_AND_CORRECTIONS_2026_08_01.md §3",
