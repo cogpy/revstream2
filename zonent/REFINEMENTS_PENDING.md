@@ -1,3 +1,8 @@
+<!-- withdrawn-claims-banner -->
+> ⛔ **This file contains claims since withdrawn or corrected (flagged 2026-10-10).** Do not reuse them; use the corrections:
+> - corrected (`tb-246m-working-copy`): The 18 Feb 2024 SLG TB is a print of the live books carrying mis-scaled journal 789 (22 Nov 2023), not a corrupted working copy; FY2024 was closed at least twice.
+> Register and sources: `docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json` (cogpy/ad-res-j7).
+
 # ZONENT Model Refinements — Pending Application
 
 Per the Refinement Protocol (CLAUDE.md), discoveries are recorded here FIRST, then propagated

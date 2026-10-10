@@ -1,3 +1,8 @@
+<!-- withdrawn-claims-banner -->
+> ⛔ **This file contains claims since withdrawn or corrected (flagged 2026-10-10).** Do not reuse them; use the corrections:
+> - corrected (`shopify-audit-trail-deleted`): On 22 May 2025 Shopify orders were rerouted to Pastel. Plead it as a stop, not a wipe.
+> Register and sources: `docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json` (cogpy/ad-res-j7).
+
 # Legal Framework Analysis Report
 ## Case 2025-137857: Revenue Stream Hijacking
 
