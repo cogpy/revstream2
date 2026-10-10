@@ -1,0 +1,147 @@
+{
+  "description": "Claims that were withdrawn or refuted after verification. scripts/check_withdrawn_claims.py fails any pull request that adds a line repeating one of them. A line is allowed when it cites the claim as withdrawn or corrected (see allow_line_markers), or sits on a verbatim or archive path (see allow_paths). Add a claim here the day it is withdrawn.",
+  "updated": "2026-10-10",
+  "allow_line_markers": "(?i)withdrawn|refuted|\\bfalse\\b|corrected|correction|superseded|do not plead|don.t plead|do not cite|do not repeat|not established|\\bnot a director|struck|~~|⛔|if .{0,20}does(n.t| not) use",
+  "allow_paths": [
+    "archive/",
+    "backups/",
+    "transcri",
+    "annexures/",
+    "ANNEXURES/",
+    "caselines/",
+    "SOURCE_DOCUMENTS/",
+    "01_court_documents/",
+    "CCE2025",
+    "docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json",
+    "scripts/check_withdrawn_claims.py",
+    "docs/strategic/CONSOLIDATED_INVESTIGATION_REPORT_2026_03_23.md",
+    "docs/strategic/CONSOLIDATED_INVESTIGATION_REPORT_2026_10_05.md",
+    "docs/audit/PHANTOM_STOCK_ROOT_CAUSE",
+    ".claude/skills/phantom-stock-forensics/",
+    "scripts/add_withdrawn_banners.py"
+  ],
+  "file_globs": [
+    "*.md",
+    "*.json",
+    "*.scm",
+    "*.html",
+    "*.txt",
+    "*.yml",
+    "*.yaml"
+  ],
+  "claims": [
+    {
+      "id": "commissioner-own-affidavit",
+      "pattern": "(?i)(acted as|was|being) (the )?commissioner of oaths for (his )?own affidavit|commissioned his own affidavit",
+      "correction": "Bantjies' affidavit of 13 Aug 2025 was commissioned by Ms Hannelle Evert (SAIBA16721) at Pretoria. Allege that he deposed while irreconcilably conflicted.",
+      "withdrawn": "2026-07-31",
+      "source": "docs/strategic/REDTEAM_REVIEW_2026_07_31.md §2.2",
+      "banner": "Bantjies' affidavit of 13 Aug 2025 was commissioned by Ms Hannelle Evert (SAIBA16721) at Pretoria. Allege that he deposed while irreconcilably conflicted."
+    },
+    {
+      "id": "bantjies-ketoni-director",
+      "pattern": "(?i)bantjies[^.\\n]{0,60}\\bdirector of ketoni|ketoni[^.\\n]{0,40}\\bdirector[^.\\n]{0,15}bantjies",
+      "correction": "Kevin Derrick is Ketoni's sole director. Bantjies is CFO of the George Group, where Derrick is also a director.",
+      "withdrawn": "2026-08-01",
+      "source": "docs/strategic/NEW_RECORDS_AND_CORRECTIONS_2026_08_01.md §7",
+      "banner": "Kevin Derrick is Ketoni's sole director. Bantjies is CFO of the George Group, where Derrick is also a director."
+    },
+    {
+      "id": "ketoni-debt",
+      "pattern": "(?i)ketoni[^.\\n]{0,40}\\b(owes|owing)\\b|both ends of (the )?R18[.,]685|ketoni[^.\\n]{0,40}(?<!not a )(?<!debt or )payout|R(18[.,]685|23[.,]165|28[.,]73)M?\\s+(Ketoni\\s+)?payout",
+      "correction": "R18,685,000 is the year-1 call-option price on the FFT's 5,000 A shares: a contingent future obligation, not a debt or payout.",
+      "withdrawn": "2026-08-02",
+      "source": "docs/strategic/NEW_RECORDS_AND_CORRECTIONS_2026_08_01.md §3",
+      "banner": "R18,685,000 is the year-1 call-option price on the FFT's 5,000 A shares: a contingent future obligation, not a debt or payout."
+    },
+    {
+      "id": "r5m-hidden-account",
+      "pattern": "(?i)hidden[- ]account (transfer|receipt)|(hidden|zero[- ]statements?|undocumented|unknown[- ]source)[^\\n]{0,80}63077691682|63077691682[^\\n]{0,80}(hidden|zero[- ]statements?|unknown source)",
+      "correction": "Peter moved R5,000,000.00 from 55270018789 into his own Money Maximiser 63077691682 on 16 Nov 2023; it came back on 27 Mar 2025. His own money, not a hidden source.",
+      "withdrawn": "2026-10-06",
+      "source": "docs/strategic/CONSOLIDATED_INVESTIGATION_REPORT_2026_10_05.md §5 item 5",
+      "banner": "Peter moved R5,000,000.00 from 55270018789 into his own Money Maximiser 63077691682 on 16 Nov 2023; it came back on 27 Mar 2025. His own money, not a hidden source."
+    },
+    {
+      "id": "peter-no-email-admission",
+      "pattern": "(?i)(by his own admission|admits?|admitted|claims?|represented)[^.\\n]{0,60}(doesn.t|does not|do not) use (email|computers)",
+      "correction": "No source has been located in Peter's papers for 'doesn't use email or computers'. Put the impersonation dilemma conditionally.",
+      "withdrawn": "2026-08-01",
+      "source": "docs/strategic/UPDATED_RECORDS_BRIEFING_2026_08_01.md §2.6",
+      "banner": "No source has been located in Peter's papers for 'doesn't use email or computers'. Put the impersonation dilemma conditionally."
+    },
+    {
+      "id": "shopify-audit-trail-deleted",
+      "pattern": "(?i)(destroy|delet)\\w*[^.\\n]{0,30}shopify audit trails?|shopify audit trails?[^.\\n]{0,20}(destroy|delet)",
+      "correction": "On 22 May 2025 Shopify orders were rerouted to Pastel. Plead it as a stop, not a wipe.",
+      "withdrawn": "2026-08-01",
+      "source": "docs/routine/memos/04_VERIFIED_CLAIMS.md C2",
+      "banner": "On 22 May 2025 Shopify orders were rerouted to Pastel. Plead it as a stop, not a wipe."
+    },
+    {
+      "id": "stock-stolen",
+      "pattern": "(?i)R5[.,](4|2)\\s?(M|million|00,000)?[^.\\n]{0,40}(stock|inventory)[^.\\n]{0,20}(stolen|theft|disappear|physically removed)|(stolen|disappeared|physically removed) (stock|inventory)[^.\\n]{0,30}R5[.,](4|2)",
+      "correction": "The R5,241,372.98 SLG write-off is the residue of a never-posted manufacturing journal (96.62% reconciled, GL-confirmed). Do not plead it as stolen or missing goods.",
+      "withdrawn": "2026-09-08",
+      "source": "docs/audit/PHANTOM_STOCK_ROOT_CAUSE_2026_09_08.md §5",
+      "banner": "The R5,241,372.98 SLG write-off is an accounting residue (no FY2025 manufacture journal; 96.62% reconciled, GL-confirmed). Do not plead it as stolen or missing goods."
+    },
+    {
+      "id": "additive-stock-total",
+      "pattern": "R9,599,539\\.63|R22,058,956\\.42",
+      "correction": "R5.4M, R5,241,372.98, R1,443,217.78, R2,756,321.85 and R4,199,539.63 describe one SLG event. Never add them.",
+      "withdrawn": "2026-07-21",
+      "source": "docs/strategic/STOCK_LOSS_SCHEDULE_2026_04_23.md §1a",
+      "banner": "R5.4M, R5,241,372.98, R1,443,217.78, R2,756,321.85 and R4,199,539.63 describe one SLG event. Never add them."
+    },
+    {
+      "id": "no-stock-count-ever",
+      "pattern": "(?i)no (physical )?stock counts? (were|was|has been|have been)? ?(ever )?(performed|done|conducted|carried out)",
+      "correction": "Counts were performed: Prime Mar–Jun 2021, joint RegimA/Salco 1 Sep 2021, SOLO 8 Feb 2022. Scope any claim to SLG's/RST's own SA warehouse stock.",
+      "withdrawn": "2026-08-15",
+      "source": "docs/strategic/STOCK_COUNT_CLAIM_CORRECTION_2026_08_15.md",
+      "banner": "Counts were performed: Prime Mar–Jun 2021, joint RegimA/Salco 1 Sep 2021, SOLO 8 Feb 2022. Scope any claim to SLG's/RST's own SA warehouse stock."
+    },
+    {
+      "id": "salco-uk",
+      "pattern": "(?i)salco[^.\\n]{0,40}\\b(UK|United Kingdom)\\b",
+      "correction": "Salco is salco.co.za, a South African logistics provider.",
+      "withdrawn": "2026-08-15",
+      "source": "docs/strategic/STOCK_COUNT_CLAIM_CORRECTION_2026_08_15.md",
+      "banner": "Salco is salco.co.za, a South African logistics provider."
+    },
+    {
+      "id": "rst-phantom-figures",
+      "pattern": "(?i)\\bRST\\b[^.\\n]{0,40}(R1,443,217\\.78|R2,756,321\\.85)",
+      "correction": "R1,443,217.78 and R2,756,321.85 are SLG finished-goods figures (7700/000), not RST.",
+      "withdrawn": "2026-07-09",
+      "source": "docs/strategic/STOCK_LOSS_SCHEDULE_2026_04_23.md (correction notice 2026-07-09)",
+      "banner": "R1,443,217.78 and R2,756,321.85 are SLG finished-goods figures (7700/000), not RST."
+    },
+    {
+      "id": "fnb-7jun-card-alerts",
+      "pattern": "(?i)(FNB|Temporary Block)[^.\\n]{0,80}alerts?[^.\\n]{0,40}(corroborat|confirm)|corroborat\\w*[^.\\n]{0,40}(FNB|Temporary Block)[^.\\n]{0,40}alerts?|(six|eight)\\s+FNB[^.\\n]{0,60}alerts?\\s+dated\\s+7\\s+June",
+      "correction": "The FNB 'Transaction declined due to Temporary Block' alert set does not corroborate a 7 June 2025 cancellation of Daniel's cards. All 50 alerts are addressed to jax@regima.zone (Jacqueline), none to Daniel; all concern card ending 5191, which EVENT_092 attributes to Jacqui's RWD card (62323196362) blocked by Peter on 12 June 2025; and the series begins 1 June 2025, before the claimed date. Cite it only as evidence of a block affecting Jacqueline's card from 1 June 2025. The 7 June date for EVENT_012 rests on settlement clause 2.3.1 (a reimbursement start date) alone; no primary cancellation notice is held.",
+      "withdrawn": "2026-10-09",
+      "source": "case_2025_137857/03_analysis/PREMEDITATION_CHAIN_SAGE_LOCKOUT_TO_STOCK_REMOVAL_2026-07-22.md correction note (2026-10-09); docs/exchange-evidence/card_cancellation.md",
+      "banner": "The FNB 'Temporary Block' alerts concern Jacqueline's card ending 5191 from 1 June 2025. They do not corroborate a 7 June cancellation of Daniel's cards."
+    },
+    {
+      "id": "tb-246m-working-copy",
+      "pattern": "(?i)(18 Feb(ruary)? 2024|246,?372,?00[34]|R246(\\.4)?M)[^\\n]{0,160}((?<!not a )(?<!not a corrupted )working copy|scale[- ]corrupt|×\\s?1,?000[- ]corrupt|fabricat\\w* variant|abandoned)|((?<!not a )(?<!not a corrupted )working copy|scale[- ]corrupt\\w*|fabricat\\w* variant)[^\\n]{0,160}(18 Feb(ruary)? 2024|246,?372,?00[34])",
+      "correction": "The 18 Feb 2024 SLG trial balance ('TB SL 2023 to 2024.xlsx') is a print of the live books, not a corrupted working copy or fabrication variant. Both complete FY2024 general-ledger prints carry journal 789 (22 Nov 2023, net CR R236,095,233.54 of mis-scaled raw-material values to 2100/000) and a 2100/000 running balance of -R246,372,003.80 on 18 Feb 2024, exactly the file's figure. The journal was reversed at year end, and FY2024 was closed at least twice (CR R440,961.47 vs DR R6,159,023.12). Its link to Bantjies' 'R246k' query is unestablished.",
+      "withdrawn": "2026-10-10",
+      "source": "docs/audit/PHANTOM_STOCK_ROOT_CAUSE_ADDENDUM4_2026_10_10.md",
+      "banner": "The 18 Feb 2024 SLG TB is a print of the live books carrying mis-scaled journal 789 (22 Nov 2023), not a corrupted working copy; FY2024 was closed at least twice."
+    },
+    {
+      "id": "conversion-never-posted-any-year",
+      "pattern": "(?i)never (been )?(posted|run)[^.\\n]{0,30}in any (financial )?year|(eight|8) years of manufacturing accounting never performed|(conversion|manufactur\\w*) journal[^.\\n]{0,80}never (posted|run)[^.\\n]{0,80}(eight|8) (financial )?years",
+      "correction": "Manufacture journals were posted in SLG's books from Mar 2022 to 25 Jan 2024 (FY2024: 561 lines, 67 bills, BILL0529-BILL0595) and none in FY2025; the 2400/000 recovery account was never used, and RST posted none in FY2024-FY2025. Plead the years without conversion and the unused recovery account, not 'never posted in any year' or 'eight years'.",
+      "withdrawn": "2026-10-10",
+      "source": "docs/audit/PHANTOM_STOCK_ROOT_CAUSE_ADDENDUM3_2026_10_08.md; docs/strategic/OLX_COMPLETE_SYNC_2026_10_10.md",
+      "banner": "SLG posted manufacture bills Mar 2022 – 25 Jan 2024 and none in FY2025; 2400/000 was never used. Do not say 'never posted in any year' or 'eight years'."
+    }
+  ],
+  "mirror_of": "cogpy/ad-res-j7 docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json (2026-10-10). ad-res-j7 is canonical: add claims there first, then copy."
+}

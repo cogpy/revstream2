@@ -1,0 +1,41 @@
+name: Withdrawn Claims Guard
+
+# Fails a pull request that adds a line repeating a claim listed in
+# docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json. Only added lines are checked,
+# so existing copies never block unrelated work; `--report` lists them.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  withdrawn-claims:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check added lines for withdrawn claims
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [[ ! "$BASE_REF" =~ ^[A-Za-z0-9._/-]+$ ]]; then
+            printf 'Unexpected base ref, refusing to run\n'
+            exit 1
+          fi
+          python3 scripts/check_withdrawn_claims.py --diff "origin/${BASE_REF}"
+
+      - name: Report remaining copies
+        if: always()
+        run: python3 scripts/check_withdrawn_claims.py --report

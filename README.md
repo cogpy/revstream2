@@ -135,3 +135,9 @@ The concentration of Shopify-related events (67% of timeline) underscores the **
 ---
 
 **License:** See LICENSE file for details.
+
+---
+
+## ⛔ Withdrawn claims — check before reusing any case finding (2026-10-10)
+
+Case claims withdrawn or corrected in cogpy/ad-res-j7 are mirrored in `docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json` (ad-res-j7 is canonical; JSON records that still carry one are listed in `docs/strategic/WITHDRAWN_CLAIMS_UNBANNERED_2026-10-10.tsv`). `.github/workflows/withdrawn-claims-guard.yml` fails a PR that adds a line repeating one; `python3 scripts/check_withdrawn_claims.py --report` lists remaining copies, and `scripts/add_withdrawn_banners.py --apply` banners files that carry them. Headline corrections: the SLG R5,241,372.98 write-off is an accounting residue, not stolen stock; Ketoni R18,685,000 is a contingent call-option price, not a debt or payout; the 18 Feb 2024 R246,372,003.80 trial balance is the live books carrying mis-scaled journal 789, reversed at year end; Bantjies did not commission his own affidavit; Shopify orders were rerouted, not audit trails deleted. Detail: ad-res-j7 `docs/strategic/CONSOLIDATED_INVESTIGATION_REPORT_2026_10_05.md` and `docs/strategic/OLX_COMPLETE_SYNC_2026_10_10.md`.
