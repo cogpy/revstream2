@@ -20,6 +20,18 @@ FNB           | First National Bank         | FIN_INST     | FNB_001           |
 PERSON_JF     | Jacqueline Faucitt          | PERSON       | PERSON_JF         | natural_person_JF      | NULL                        | HG_PERSON_JF
 ```
 
+> **Known inconsistencies in this sample — do not treat as resolved.**
+>
+> 1. `canonical_id` values above use three naming styles (`AYMAC`, `VILLA_VIA`, `PERSON_JF`)
+>    that do not match the canonical entity codes in `registry/MASTER_ENTITIES.md`
+>    (`AYM`, `VVA`, `JF`). Cross-repo joins keyed on the registry code will not match this
+>    table without an alias mapping.
+> 2. `model/SYSTEM_MODEL.md` documents `RST`'s `agent_model_id` as `AGENT_RST`, whereas this
+>    table records `ENTITY_RST`.
+>
+> Both reflect the upstream `fincosys/sql_batches/12_entity_mappings.sql` content as-is.
+> Reconciling them requires checking the deployed Neon table rather than editing these docs.
+
 ## Cross-Reference Types
 
 ### OWNERSHIP
@@ -76,6 +88,16 @@ Statement-level analysis snapshots capture cross-paradigm metrics:
 }
 ```
 
+> **`account_health_index` does not reproduce from the documented formula.**
+> `model/stock-flow/SF_SDM_SPEC.md` defines it as `credits / (credits + debits + fees)`,
+> which for these values gives `5055 / (5055 + 1477.53 + 143) = 0.7572`, not `0.7907`.
+> `net_change`, `fee_burden_ratio` and the closing balance all reconcile, so the discrepancy
+> is isolated to this one metric — but not to this one file: the sample table in
+> `model/stock-flow/SF_SDM_SPEC.md` also reports 79% health for this account, so `0.7907`
+> appears in two places and both would need correcting if the formula is authoritative.
+> Confirm against `fincosys/models/stock_flow/system_dynamics_model.py` before relying on
+> either value.
+
 ## Observer Pattern for Cross-Model Communication
 
 The `BaseModel` class implements an observer pattern allowing models to notify
@@ -103,7 +125,8 @@ When an entity changes in one paradigm:
 | PERSON_002 | - | Rynette Farrar |
 | PERSON_003 | - | Adderory (Rynette's Son) |
 | PERSON_004 | JF | Jacqueline Faucitt |
-| PERSON_005 | DJF | Daniel James Faucitt |
+| PERSON_005 | DF | Daniel James Faucitt |
+| PERSON_006 | - | Linda (Bookkeeper, Rynette's sister) |
 | PERSON_007 | - | Danie Bantjies |
 | ORG_001 | RWD | Regima Worldwide Distribution |
 | ORG_002 | RST | Regima Skin Treatments CC |
@@ -113,6 +136,10 @@ When an entity changes in one paradigm:
 | ORG_006 | RSA | RegimA SA |
 | ORG_008 | REZ | Rezonance (Pty) Ltd |
 | TRUST_001 | FFT | Faucitt Family Trust |
+
+Persons with fincosys code `-` have no fincosys entity code of their own (they are not
+account holders in the FNB corpus); they are carried by revstream2 alias only. See
+`registry/MASTER_ENTITIES.md` ("Key Non-Entity Persons") for the full PERSON_001-012 list.
 
 ## Neon Sync Pipeline
 

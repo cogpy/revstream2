@@ -104,8 +104,8 @@ Every figure re-derived from the primary trial-balance xlsx files, not from any 
 |---|---|---|
 | FY2020 versions diverge R7.33M | **Refuted** | Four files identical on all inventory rows (Boxes 898,930.17); the 8,231,078 was the FY2019 inventory total read into the Boxes row by the extractor |
 | FY2022 R5.47M | **Unverified** | No FY2022 spreadsheet held; JSON-only; do not model |
-| FY2024 three irreconcilable versions | **Replaced** | Two statements, reconciling to the cent via a retrospective **−R936,873.05** write-down (R905,004.19 packaging); the 18 Feb 2024 file is a pre-year-end working copy — exclude, do not call it a version |
-| ×1000 scale corruption | **Hedged** | Consistent with, not proven; cite as "working copy, excluded" |
+| FY2024 three irreconcilable versions | **Superseded** | Two statements, reconciling to the cent via a retrospective **−R936,873.05** write-down (R905,004.19 packaging). ⛔ Corrected 2026-10-10 (`tb-246m-working-copy`): the 18 Feb 2024 file is a print of the live books carrying journal 789 (22 Nov 2023, mis-scaled raw-material values to 2100/000; running balance −R246,372,003.80), not a working copy; the journal was reversed at year end and FY2024 was closed at least twice (CR R440,961.47 vs DR R6,159,023.12). Source: `docs/audit/PHANTOM_STOCK_ROOT_CAUSE_ADDENDUM4_2026_10_10.md` |
+| ×1000 scale corruption | **Superseded** | ⛔ Corrected 2026-10-10 (`tb-246m-working-copy`): not a corruption — journal 789 carried mis-scaled values and was reversed at year end; do not cite the file as a working copy or as corrupted. Its link to Bantjies' 'R246k' query is unestablished |
 
 ### C3. New, verified, not yet in the model
 
