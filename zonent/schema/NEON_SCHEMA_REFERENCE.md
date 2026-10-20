@@ -13,20 +13,80 @@
 ## Schema Overview
 
 | Schema | Tables | Purpose |
-|--------|--------|---------|
+|--------|--------|----------|
 | `entity_relation` | entities, relations | ER-ABM agent graph |
 | `event_timeline` | events, state_machines, state_transitions, transactions | Discrete event simulation |
 | `stock_flow` | variables, flows, feedback_loops, simulation_history | System dynamics |
 | `hypergraph` | nodes, hyperedges, symbolic_rules, type_hierarchy | Neuro-symbolic inference |
 | `integration` | entity_mappings, cross_references, analysis_snapshots | Cross-paradigm binding |
 | `consolidated_accounts` | accounts, transactions, elimination_entries, membrane_summary, qbo_entity_mapping | Group consolidation |
+| `fund_flow` | edges, anomalies, entities | Forensic fund tracing |
 | `accountant_records` | trial_balances, annual_financial_statements, invoices, sars_vat_documents | Forensic audit |
+
+> **Note**: the seven core schemas enumerated in `CLAUDE.md` end with `fund_flow`, whose
+> tables are confirmed live in the fincosys audit cycles (see
+> `fincosys/audit/AUDIT_REPORT_2026-05-09.md` and the KSM cycle reports probing
+> `fund_flow.edges` / `fund_flow.anomalies` / `fund_flow.entities`). `accountant_records`
+> is an additional forensic-audit ingestion schema documented here; verify it against the
+> live Neon project before building against it.
 
 ## Extensions Required
 ```sql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 ```
+
+> **The DDL below is a reference, not a runnable script.** Tables are created
+> schema-qualified, but the accompanying index and foreign-key statements use bare table
+> names, reproducing the upstream fincosys source. None of these tables exist in `public`,
+> so running the file top-to-bottom under a default `search_path` will fail. `transactions`
+> is additionally declared in two schemas (`event_timeline` here, and `consolidated_accounts`
+> whose DDL lives in `model/membrane-coa/MEMBRANE_COA_SPEC.md` — itself unqualified, so it
+> shares this problem), so an unqualified reference to it is ambiguous as well as
+> unresolvable. Qualify the names when provisioning.
+
+---
+
+## Access Control
+
+> **Status: requires policy review before provisioning.**
+
+Every schema in this database holds forensic financial records, communications evidence, and
+legal material relating to named individuals in active High Court proceedings (case
+2025-137857 — sourced from `cogpy/ad-res-j7`, the case-management repository for this
+matter; this file is not the origin of that number).
+
+The DDL below specifies **no access control whatsoever** — no
+`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`, no policies, no grants. Whatever subset of it
+you successfully provision is readable in full by any role holding a connection string,
+including `evidence` (with OCR text), `timeline_events`, `cases`, and
+`integration.analysis_snapshots`.
+
+Requirements for any deployment provisioned from this reference:
+
+1. **Enable RLS on every table in every schema listed in the Schema Overview above.** Two of
+   them have no DDL in this file: `consolidated_accounts` is defined in
+   `model/membrane-coa/MEMBRANE_COA_SPEC.md`, and `accountant_records` is not transcribed
+   anywhere in this repo — so this requirement spans documents and cannot be satisfied by
+   reading this file alone. It also covers the unqualified tables in the Enhanced Schema
+   section below. Note the Schema Overview's own caveat: `CLAUDE.md` enumerates seven schemas
+   and its Purpose line says five, so the exact set is unsettled. This requirement is
+   deliberately phrased against *whatever schemas actually exist* rather than a fixed count,
+   so a miscount cannot leave one unprotected.
+2. **Default deny.** RLS with no policy denies all access to non-owner roles; add policies
+   explicitly rather than relying on a permissive default.
+3. **Separate the service role from human roles.** Sync pipelines (fincosys Stage 6a) need
+   broad write access; analyst and reporting roles should not inherit it.
+4. **Do not grant `authenticated` blanket read** over evidence or accountant records.
+   Scope reads to the entities a principal is authorised for.
+5. **Audit reads, not just writes.** For evidence tables, read access is itself material to
+   chain of custody.
+
+The concrete policy set is a decision for whoever owns the Neon project — it depends on the
+role model in use (Neon native roles vs a Supabase-style `service_role`/`authenticated`
+split), which is not recorded anywhere in this repo. It is deliberately not invented here,
+because a wrong-but-runnable policy on forensic evidence is worse than an explicit gap.
+Replace this paragraph with the agreed `CREATE POLICY` set once settled.
 
 ---
 
@@ -383,6 +443,13 @@ CREATE INDEX idx_snapshots_type ON analysis_snapshots(analysis_type);
 
 ## Enhanced Schema (ad-res-j7)
 
+> **Owning schema not established.** The tables in this section — together with
+> `entity_relationships` and `entity_versions` above — are declared without schema
+> qualification and appear in no row of the Schema Overview, so it is not recorded which
+> schema they belong to. The Access Control section requires RLS on `evidence`,
+> `timeline_events` and `cases`; that requirement **cannot be actioned until their owning
+> schema is established**. Resolve against the deployed project before provisioning.
+
 ### evidence
 ```sql
 CREATE TABLE evidence (
@@ -478,7 +545,7 @@ $$ LANGUAGE plpgsql;
 ## SQL Batch Files (fincosys)
 
 | File | Lines | Content |
-|------|-------|---------|
+|------|-------|----------|
 | 01_entities.sql | 2,645 | Entity INSERT statements |
 | 02_relations.sql | 249 | Relation INSERT statements |
 | 03_events.sql | 3,740 | Event INSERT statements |
