@@ -1,6 +1,6 @@
 {
   "description": "Claims that were withdrawn or refuted after verification. scripts/check_withdrawn_claims.py fails any pull request that adds a line repeating one of them. A line is allowed when it cites the claim as withdrawn or corrected (see allow_line_markers), or sits on a verbatim or archive path (see allow_paths). Add a claim here the day it is withdrawn.",
-  "updated": "2026-10-10",
+  "updated": "2026-10-19",
   "allow_line_markers": "(?i)withdrawn|refuted|\\bfalse\\b|corrected|correction|superseded|do not plead|don.t plead|do not cite|do not repeat|not established|\\bnot a director|struck|~~|⛔|if .{0,20}does(n.t| not) use",
   "allow_paths": [
     "archive/",
@@ -141,6 +141,14 @@
       "withdrawn": "2026-10-10",
       "source": "docs/audit/PHANTOM_STOCK_ROOT_CAUSE_ADDENDUM3_2026_10_08.md; docs/strategic/OLX_COMPLETE_SYNC_2026_10_10.md",
       "banner": "SLG posted manufacture bills Mar 2022 – 25 Jan 2024 and none in FY2025; 2400/000 was never used. Do not say 'never posted in any year' or 'eight years'."
+    },
+    {
+      "id": "no-count-sheet-survives",
+      "pattern": "(?i)no (count sheet|copy)[^.\\n]{0,120}surviv(?![^.\\n]{0,40}email corpus)",
+      "correction": "The June 2021 Prime stock-take feedback report is held (caselex-sync support/ext_xlsx_key_files/Strategic_Logistics_CC/'Copy of Strategic stock take feedback report Analysed.xlsx': 2 Jun 2021 against 22 Feb 2021, net variance R22,782.59), and fincosys's Prime stock tracker of 5 Sep 2026 reproduces it. Only the email archive lacks count sheets, because it holds no attachments.",
+      "withdrawn": "2026-10-19",
+      "source": "docs/strategic/CROSS_REPO_FINDINGS_SYNC_2026_10_19.md §4; caselex-sync 2025-137857/ledger_baseline/12_PPM_CONVERSION_EVENTS_REGISTER.md §5.6",
+      "banner": "The June 2021 Prime stock-take report is held (caselex-sync; net variance R22,782.59). Only the email archive lacks count sheets."
     }
   ],
   "mirror_of": "cogpy/ad-res-j7 docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json (2026-10-10). ad-res-j7 is canonical: add claims there first, then copy."
