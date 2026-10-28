@@ -7,6 +7,7 @@ Key features:
 - --diff BASE: fails if lines added since BASE repeat a withdrawn claim (CI mode)
 - --report: counts the copies still in tracked files, per claim and per directory
 - Lines citing a claim as withdrawn or corrected, and verbatim/archive paths, are allowed
+- A claim hard-wrapped across the lines of one prose paragraph (.md/.txt/.html) is caught too
 - --root DIR / --register FILE: scan another repository against this (or another) register
 """
 import argparse
@@ -20,6 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 REGISTER = ROOT / "docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json"
+PROSE_SUFFIXES = {".md", ".txt", ".html"}  # hard-wrapped prose; data formats keep one field per line
 
 
 def load_register():
@@ -57,6 +59,54 @@ def violations(path, lines, claims, allow):
         for c in claims:
             if c["rx"].search(text):
                 yield path, no, c, text.strip()
+    if Path(path).suffix.lower() in PROSE_SUFFIXES:
+        yield from wrapped_violations(path, {no for no, _ in lines}, claims, allow, struck)
+
+
+BLOCK_START = re.compile(r"\s*([-*+]|\d+[.)]|#+)\s")  # a list item or heading starts a new unit
+
+
+def joinable(text):
+    """A line that continues prose: not blank, not a table row, not a code fence."""
+    t = text.strip()
+    return bool(t) and not t.startswith(("|", "```"))
+
+
+def wrapped_violations(path, wanted, claims, allow, struck):
+    """Claims hard-wrapped across lines of one paragraph, which no single line matches.
+
+    Each paragraph (a run of joinable lines outside code fences; a list item or heading
+    starts a new one) holding a line in `wanted` is joined with spaces and searched
+    once per claim; only a match that crosses a join is reported, at its first line. It is skipped when a line it touches carries an allow marker,
+    is struck through, or repeats the claim on its own (the per-line check already
+    reports that), and reported only when it touches a line in `wanted`.
+    """
+    paragraphs, run, fenced = [], [], False
+    for no, text in read_lines(path):
+        if text.strip().startswith("```"):
+            fenced = not fenced
+        if fenced or not joinable(text) or BLOCK_START.match(text):
+            paragraphs.append(run)
+            run = []
+        if not fenced and joinable(text):
+            run.append((no, text.strip()))
+    paragraphs.append(run)
+    for group in paragraphs:
+        if len(group) < 2 or not wanted.intersection(no for no, _ in group):
+            continue
+        spans, pos = [], 0
+        for no, text in group:
+            spans.append((no, text, pos, pos + len(text)))
+            pos += len(text) + 1
+        joined = " ".join(text for _, text in group)
+        for c in claims:
+            for m in c["rx"].finditer(joined):
+                touched = [(no, text) for no, text, a, b in spans if a < m.end() and m.start() < b]
+                if len(touched) < 2 or not wanted.intersection(no for no, _ in touched):
+                    continue
+                if any(no in struck or allow.search(t) or c["rx"].search(t) for no, t in touched):
+                    continue
+                yield path, touched[0][0], c, " / ".join(t for _, t in touched)
 
 
 def added_lines(base):
@@ -80,24 +130,44 @@ def tracked_files():
     return [p for p in out.decode().split("\0") if p]
 
 
+def prefilter_pattern(pattern):
+    """Loosen a claim pattern so it also matches when hard-wrapped (a superset, for ripgrep -U only)."""
+    pattern = re.sub(r"\(\?<[!=][^)]*\)", "", pattern)  # lookbehinds would no longer be fixed-width
+    # the checks strip indentation before joining lines, so allow for it in bounded gaps
+    pattern = re.sub(r"\{(\d+),(\d+)\}", lambda m: "{%s,%d}" % (m.group(1), int(m.group(2)) + 200), pattern)
+    return pattern.replace("(?i)", "").replace("[^.\\n]", "[^.]").replace("[^\\n]", "[\\s\\S]").replace(" ", "\\s*")
+
+
 def candidate_files(reg, claims):
-    """Tracked files that may carry a claim: ripgrep prefilter when available, else every tracked file."""
+    """Map each tracked file that may carry a claim to the line numbers worth checking.
+
+    ripgrep runs the loosened patterns multiline and reports every line a possible
+    match touches, so the checks below only read those lines and their paragraphs.
+    Without ripgrep (or if it fails) every tracked file is checked in full (None).
+    """
     tracked = tracked_files()
     import shutil
     import tempfile
     if not shutil.which("rg"):
-        return tracked
-    combined = "|".join("(?:%s)" % c["pattern"].replace("(?i)", "") for c in claims)
+        print("⚠️  ripgrep not found: checking every tracked file in full (slow)")
+        return dict.fromkeys(tracked)
+    combined = "|".join("(?:%s)" % prefilter_pattern(c["pattern"]) for c in claims)
     with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
         f.write(combined)
     globs = sum([["-g", g] for g in reg["file_globs"]], [])
-    r = subprocess.run(["rg", "-l", "-i", "-P", "--no-messages", "-f", f.name, *globs, "."],
-                       cwd=str(ROOT), capture_output=True, text=True)
+    r = subprocess.run(["rg", "-n", "-i", "-P", "-U", "--null", "--no-heading", "--no-messages",
+                        "-f", f.name, *globs, "."], cwd=str(ROOT), capture_output=True, text=True)
     Path(f.name).unlink()
     if r.returncode not in (0, 1):
-        return tracked
-    hits = {p[2:] if p.startswith("./") else p for p in r.stdout.splitlines() if p}
-    return [p for p in tracked if p in hits]
+        print(f"⚠️  ripgrep prefilter failed, checking every tracked file in full (slow): {r.stderr.strip()[:200]}")
+        return dict.fromkeys(tracked)
+    hits = collections.defaultdict(set)
+    for line in r.stdout.splitlines():
+        p, _, rest = line.partition("\0")
+        no = rest.split(":", 1)[0]
+        if no.isdigit():
+            hits[p[2:] if p.startswith("./") else p].add(int(no))
+    return {p: hits[p] for p in tracked if p in hits}
 
 
 def read_lines(path):
@@ -126,10 +196,13 @@ def run_diff(base, reg, claims, allow):
 
 def run_report(reg, claims, allow, out_path):
     per_claim, per_dir, rows = collections.Counter(), collections.Counter(), []
-    for path in candidate_files(reg, claims):
+    for path, nos in candidate_files(reg, claims).items():
         if not path_checked(path, reg):
             continue
-        for p, no, c, text in violations(path, read_lines(path), claims, allow):
+        lines = read_lines(path)
+        if nos is not None:
+            lines = [(no, text) for no, text in lines if no in nos]
+        for p, no, c, text in violations(path, lines, claims, allow):
             per_claim[c["id"]] += 1
             per_dir[path.split("/")[0]] += 1
             rows.append((c["id"], p, no))

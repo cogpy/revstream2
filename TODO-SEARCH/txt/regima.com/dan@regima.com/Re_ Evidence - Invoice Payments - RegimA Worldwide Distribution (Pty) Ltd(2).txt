@@ -1,3 +1,8 @@
+# withdrawn-claims-banner
+# ⛔ **This file contains claims since withdrawn or corrected (flagged 2026-10-28).** Do not reuse them; use the corrections:
+# - corrected (`rst-is-the-manufacturer`): RST is not the manufacturer and never manufactured; SLG (Strategic Logistics CC) is the manufacturing principal and RST buys stock from it. Bank, customs and DR H's own books decide this, not the group's accounts (fincosys-core `reports/parties/SLG_RST_ATTRIBUTION.md`).
+# Register and sources: `docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json` (cogpy/ad-res-j7).
+
 ﻿From:	"Daniel Faucitt" <dan@regima.com>
 Sent:	14/10/2025 13:51:15
 To:	"Natan Back" <Natan@ianlevitt.co.za>; "Doron Block" <block@rivoniaadvocates.co.za>

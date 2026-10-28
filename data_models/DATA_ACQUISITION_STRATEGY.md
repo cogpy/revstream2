@@ -1,6 +1,7 @@
 <!-- withdrawn-claims-banner -->
 > ⛔ **This file contains claims since withdrawn or corrected (flagged 2026-10-10).** Do not reuse them; use the corrections:
 > - corrected (`stock-stolen`): The R5,241,372.98 SLG write-off is an accounting residue (no FY2025 manufacture journal; 96.62% reconciled, GL-confirmed). Do not plead it as stolen or missing goods.
+> - corrected (`strategic-logistics-group`): 'Strategic Logistics Group' is not the entity's name; it is Strategic Logistics CC (SLG), the manufacturing principal.
 > Register and sources: `docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json` (cogpy/ad-res-j7).
 
 # Data Acquisition Strategy: Missing Entities and Events
