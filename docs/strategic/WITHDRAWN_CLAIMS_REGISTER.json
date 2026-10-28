@@ -1,6 +1,7 @@
 {
   "description": "Claims that were withdrawn or refuted after verification. scripts/check_withdrawn_claims.py fails any pull request that adds a line repeating one of them. A line is allowed when it cites the claim as withdrawn or corrected (see allow_line_markers), or sits on a verbatim or archive path (see allow_paths). Add a claim here the day it is withdrawn.",
-  "updated": "2026-10-19",
+  "updated": "2026-10-27",
+  "mirror_of": "cogpy/ad-res-j7 docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json (2026-10-27). ad-res-j7 is canonical: add claims there first, then copy.",
   "allow_line_markers": "(?i)withdrawn|refuted|\\bfalse\\b|corrected|correction|superseded|do not plead|don.t plead|do not cite|do not repeat|not established|\\bnot a director|struck|~~|⛔|if .{0,20}does(n.t| not) use",
   "allow_paths": [
     "archive/",
@@ -149,7 +150,110 @@
       "withdrawn": "2026-10-19",
       "source": "docs/strategic/CROSS_REPO_FINDINGS_SYNC_2026_10_19.md §4; caselex-sync 2025-137857/ledger_baseline/12_PPM_CONVERSION_EVENTS_REGISTER.md §5.6",
       "banner": "The June 2021 Prime stock-take report is held (caselex-sync; net variance R22,782.59). Only the email archive lacks count sheets."
+    },
+    {
+      "id": "rst-is-the-manufacturer",
+      "pattern": "(?i)(\\bRST\\b|RegimA Skin Treatments( CC)?)(\\s*\\((RegimA Skin Treatments|RST)\\))?\\**\\s*([(\\[|:—–-]|<br\\s*/?>|\\bis the\\b|\\boperated as the\\b|,\\s*the\\b)\\s*\\**\\s*(product |profitable )?manufactur(er|ing)(?!\\s*(cost|recovery|bill|journal|account|module))|manufacturer\\s*\\((RST|RegimA Skin Treatments)|\\bmanufacturer:\\**\\s*RegimA Skin Treatments|\\bRST manufactur(es|ing (staff|employees|output|practices|hub|entity))\\b|(\\bRST\\b|RegimA Skin Treatments)[^.\\n]{0,40}\\bmanufacturing source\\b",
+      "correction": "RST (RegimA Skin Treatments CC) has never manufactured. Strategic Logistics CC (SLG) is the manufacturing principal: it orders from and pays the contract manufacturer Prime Product Manufacturing (the bank shows SLG R40.4m against RST R20.3m, RST's last PPM payment in 2018), buys R23.9m of the R27.0m of raw materials and packaging, claims the input VAT, is named consignor on every customs record, and DR H's own books name it supplier 2017-2020. RST buys finished stock from SLG. The label began as the heading 'RST (Manufacturing Hub)' over an October 2025 analysis of the group's own trial balances (rzonedevops/analysis 6195a97), whose tables put the manufacture-cost accounts under SLG.",
+      "withdrawn": "2026-10-21",
+      "source": "case owner, 2026-10-21; fincosys/fincosys-core reports/parties/SLG_RST_ATTRIBUTION.md (§2a lineage) and reports/parties/SLG_RST_ATTRIBUTION_TIMELINE.md",
+      "banner": "RST is not the manufacturer and never manufactured; SLG (Strategic Logistics CC) is the manufacturing principal and RST buys stock from it. Bank, customs and DR H's own books decide this, not the group's accounts (fincosys-core `reports/parties/SLG_RST_ATTRIBUTION.md`)."
+    },
+    {
+      "id": "slg-is-a-warehouse",
+      "pattern": "(?i)(\\bSLG\\b|Strategic Logistics)[^\\n]{0,80}(warehouse\\s*/\\s*logistics|warehouse, stock holding|third-party warehousing)|\\bSLG\\s*\\(warehouse\\)|Strategic Logistics[^.\\n]{0,30}\\b(is|as) (a |the )?(warehouse|logistics (provider|arm|company))",
+      "correction": "SLG (Strategic Logistics CC) is not a warehouse or logistics provider holding stock for RST/RWD. It is the group's manufacturing principal: it contracts and pays the manufacturer, buys the inputs, claims the input VAT and exports (fincosys-core SLG_RST_ATTRIBUTION). The 'warehouse / logistics' role was written by an AI session on 2026-03-23 (ad-res-j7 6d58947) with a cited source file held in no branch.",
+      "withdrawn": "2026-10-21",
+      "source": "case owner, 2026-10-21; fincosys/fincosys-core reports/parties/SLG_RST_ATTRIBUTION.md",
+      "banner": "SLG is not a warehouse/logistics entity holding stock for RST; it is the manufacturing principal (fincosys-core `reports/parties/SLG_RST_ATTRIBUTION.md`)."
+    },
+    {
+      "id": "strategic-logistics-group",
+      "pattern": "(?i)Strategic Logistics Group",
+      "correction": "The entity is Strategic Logistics CC (SLG), registered as a close corporation. 'Strategic Logistics Group' is a name first written in rzonedevops/analysis on 2025-10-09 (2a2b763) and no record carries it.",
+      "withdrawn": "2026-10-21",
+      "source": "fincosys/fincosys-core reports/parties/SLG_RST_ATTRIBUTION.md §2a",
+      "banner": "'Strategic Logistics Group' is not the entity's name; it is Strategic Logistics CC (SLG), the manufacturing principal."
+    },
+    {
+      "id": "bantjes-paid-from-df-savings",
+      "pattern": "(?i)(62089474309|DF (FNB )?savings)(?:[^.\\n]|\\.(?=\\d)){0,120}Bantj|Bantj(?:[^.\\n]|\\.(?=\\d)){0,120}(62089474309|DF (FNB )?savings)",
+      "correction": "FNB advices 92226T2F and S2SFGX6F are RST's own R5,000 payments to D J Bantjes of 30 Sep and 30 Nov 2019 (RST FNB 55270035642, statements 211 and 213). The DF savings debits of 3 Oct and 2 Dec 2019 went to DF's own current account and to RZI.",
+      "withdrawn": "2026-10-27",
+      "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
+      "banner": "The 2019 R5,000 payments to D J Bantjes came from RST, not from Daniel Faucitt's savings account."
+    },
+    {
+      "id": "addarory-literal-1700493",
+      "pattern": "1,700,493\\.86|294,572\\.86|5,695,001\\.61",
+      "correction": "Literal-name Addarory payments: 8, R1,664,060.81 (SLG R1,405,921.00; RST 6 payments, R258,139.81). With the alias payments the channel total is R5,658,568.56.",
+      "withdrawn": "2026-10-27",
+      "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
+      "banner": "Literal-name Addarory payments are 8, R1,664,060.81 (RST: 6, R258,139.81)."
+    },
+    {
+      "id": "prime-2023-2026-11234012",
+      "pattern": "11,234,012\\.25|2,943,973\\.26",
+      "correction": "SLG paid Prime R11,112,748.09 in 2023–2026; 2025: 8 payments, R2,822,709.10.",
+      "withdrawn": "2026-10-27",
+      "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
+      "banner": "SLG's Prime payments 2023–2026 are R11,112,748.09 (2025: R2,822,709.10)."
+    },
+    {
+      "id": "proficos-2023-2026-1425844",
+      "pattern": "1,425,844\\.96",
+      "correction": "SLG paid Proficos R1,907,852.46 in 2023–2026; R1,425,844.96 omits the 29 Aug 2025 R482,007.50.",
+      "withdrawn": "2026-10-27",
+      "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
+      "banner": "SLG's Proficos payments 2023–2026 are R1,907,852.46."
+    },
+    {
+      "id": "slg-fy2022-afs-inventory-6474658",
+      "pattern": "(?i)inventor(?:(?!bank|cash)[^\\n]){0,60}?6,474,658|6,474,658[*\\s]{0,4}(?:\\(\\s*|as\\s+)?inventor|FY\\s?2022(?:(?!FY\\s?20)[^\\n]){0,60}retained loss (of )?R?14,604",
+      "correction": "SLG's signed FY2022 AFS show inventory R8,344,000 and a loss for the year of R6,978; R6,474,658 is bank and cash and R14,604 the FY2021 loss.",
+      "withdrawn": "2026-10-27",
+      "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
+      "banner": "SLG FY2022 AFS: inventory R8,344,000, loss R6,978 (not R6,474,658 / R14,604)."
+    },
+    {
+      "id": "sars-prov-653827-unmatched",
+      "pattern": "653,827\\.28",
+      "correction": "One RST provisional-tax payment of R326,913.64 on 25 Feb 2021, held as two notification copies (trace FB8Y946G).",
+      "withdrawn": "2026-10-27",
+      "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
+      "banner": "The SARS PROV total is one RST payment of R326,913.64, not R653,827.28 unmatched."
+    },
+    {
+      "id": "rwd-7700-2887676-aje",
+      "pattern": "(?i)2,887,676\\.80[^\\n]{0,60}(written|to zero|to nil|→ ?0|to R0)|(written|nil)[^\\n]{0,60}2,887,676\\.80",
+      "correction": "RWD's FY2020 AJE wrote 7700/000 Finished Goods of R141,163.95 to nil; R2,887,676.80 is in the workbook's first column pair.",
+      "withdrawn": "2026-10-27",
+      "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
+      "banner": "RWD's FY2020 finished-goods AJE was R141,163.95, not R2,887,676.80."
+    },
+    {
+      "id": "rwd-sav-fy2425-4288883",
+      "pattern": "4,288,883\\.75",
+      "correction": "RWD savings 62836164880 paid out R5,288,883.75 in FY2024/25 (five transfers incl. R1,000,000 on 18 Apr 2024).",
+      "withdrawn": "2026-10-27",
+      "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
+      "banner": "RWD savings FY2024/25 outflows are R5,288,883.75."
+    },
+    {
+      "id": "slg-absa-main-flows-2025-26",
+      "pattern": "11,938,963\\.47|11,943,947\\.36|2,509,948\\.87|1,131,268\\.29|3,641,217\\.16|9,305,513\\.04",
+      "correction": "SLG ABSA 4112315016, stmts 15–27: R12,460,649.26 in (WWD R10,152,000.00; Reg R1,747,000.00; Strat Inv R302,000.00; card R259,649.26) and R12,466,083.15 out, per the printed account summaries. Appendix E distributors in that account: R2,716,901.04; others R1,836,535.21.",
+      "withdrawn": "2026-10-27",
+      "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
+      "banner": "SLG's ABSA main account flows are R12,460,649.26 in / R12,466,083.15 out (Appendix E distributors R2,716,901.04)."
+    },
+    {
+      "id": "core-inventory-exposure-15611759",
+      "pattern": "15,611,759\\.72",
+      "correction": "No core inventory-exposure total survives: the RWD row is R141,163.95, the FY2020 Boxes divergence was refuted on 2026-09-22, and R5,241,372.98 is an accounting residue, not a loss. State each row on its own.",
+      "withdrawn": "2026-10-27",
+      "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
+      "banner": "The R15,611,759.72 'core inventory-fraud exposure' is withdrawn; no total survives."
     }
-  ],
-  "mirror_of": "cogpy/ad-res-j7 docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json (2026-10-10). ad-res-j7 is canonical: add claims there first, then copy."
+  ]
 }
