@@ -1,8 +1,14 @@
 {
-  "description": "Claims that were withdrawn or refuted after verification. scripts/check_withdrawn_claims.py fails any pull request that adds a line repeating one of them. A line is allowed when it cites the claim as withdrawn or corrected (see allow_line_markers), or sits on a verbatim or archive path (see allow_paths). Add a claim here the day it is withdrawn.",
-  "updated": "2026-10-27",
-  "mirror_of": "cogpy/ad-res-j7 docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json (2026-10-27). ad-res-j7 is canonical: add claims there first, then copy.",
-  "allow_line_markers": "(?i)withdrawn|refuted|\\bfalse\\b|corrected|correction|superseded|do not plead|don.t plead|do not cite|do not repeat|not established|\\bnot a director|struck|~~|⛔|if .{0,20}does(n.t| not) use",
+  "description": "Claims that were withdrawn or refuted after verification. scripts/check_withdrawn_claims.py fails any pull request that adds a line repeating one of them. A line is allowed when it cites the claim as withdrawn or corrected (see allow_line_markers), or sits on a verbatim or archive path (see allow_paths). Each claim carries must_match and must_not_match. The script refuses to run when a pattern misses a must_match form or matches a must_not_match correction. Add a claim here the day it is withdrawn, with both lists.",
+  "updated": "2026-11-03",
+  "mirror_of": "cogpy/ad-res-j7 docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json (2026-11-03). ad-res-j7 is canonical: add claims there first, then copy.",
+  "allow_line_markers": "(?i)withdrawn|refuted|\\bfalse\\b|corrected|correction|superseded|do not plead|don.t plead|do not cite|do not repeat|not established|\\bnot a director|struck|~~|⛔|if .{0,20}does(n.t| not) use|not (?:shown to be )?an extraction",
+  "exemption_must_not_match": [
+    "The R10.6M extraction was restated by counsel."
+  ],
+  "exemption_must_match": [
+    "The R10,624,131.18 of 3 and 11 Sep 2025 is restated as transfers to savings, not an extraction."
+  ],
   "allow_paths": [
     "archive/",
     "backups/",
@@ -34,6 +40,12 @@
     {
       "id": "commissioner-own-affidavit",
       "pattern": "(?i)(acted as|was|being) (the )?commissioner of oaths for (his )?own affidavit|commissioned his own affidavit",
+      "must_match": [
+        "He acted as commissioner of oaths for his own affidavit."
+      ],
+      "must_not_match": [
+        "Bantjies deposed while conflicted; Ms Hannelle Evert commissioned the affidavit."
+      ],
       "correction": "Bantjies' affidavit of 13 Aug 2025 was commissioned by Ms Hannelle Evert (SAIBA16721) at Pretoria. Allege that he deposed while irreconcilably conflicted.",
       "withdrawn": "2026-07-31",
       "source": "docs/strategic/REDTEAM_REVIEW_2026_07_31.md §2.2",
@@ -42,6 +54,12 @@
     {
       "id": "bantjies-ketoni-director",
       "pattern": "(?i)bantjies[^.\\n]{0,60}\\bdirector of ketoni|ketoni[^.\\n]{0,40}\\bdirector[^.\\n]{0,15}bantjies",
+      "must_match": [
+        "Bantjies is a director of Ketoni."
+      ],
+      "must_not_match": [
+        "Kevin Derrick is Ketoni's sole director. Bantjies is CFO of the George Group."
+      ],
       "correction": "Kevin Derrick is Ketoni's sole director. Bantjies is CFO of the George Group, where Derrick is also a director.",
       "withdrawn": "2026-08-01",
       "source": "docs/strategic/NEW_RECORDS_AND_CORRECTIONS_2026_08_01.md §7",
@@ -50,6 +68,13 @@
     {
       "id": "ketoni-debt",
       "pattern": "(?i)ketoni[^.\\n]{0,40}\\b(owes|owing)\\b|both ends of (the )?R18[.,]685|ketoni[^.\\n]{0,40}(?<!not a )(?<!debt or )payout|R(18[.,]685|23[.,]165|28[.,]73)M?\\s+(Ketoni\\s+)?payout",
+      "must_match": [
+        "Ketoni owes R18.685M to the trust.",
+        "Bantjies controls both ends of the R18.685M transaction."
+      ],
+      "must_not_match": [
+        "R18,685,000 is the year-1 call-option price, not a debt or payout."
+      ],
       "correction": "R18,685,000 is the year-1 call-option price on the FFT's 5,000 A shares: a contingent future obligation, not a debt or payout.",
       "withdrawn": "2026-08-02",
       "source": "docs/strategic/NEW_RECORDS_AND_CORRECTIONS_2026_08_01.md §3",
@@ -58,6 +83,12 @@
     {
       "id": "r5m-hidden-account",
       "pattern": "(?i)hidden[- ]account (transfer|receipt)|(hidden|zero[- ]statements?|undocumented|unknown[- ]source)[^\\n]{0,80}63077691682|63077691682[^\\n]{0,80}(hidden|zero[- ]statements?|unknown source)",
+      "must_match": [
+        "The hidden-account transfer into 63077691682."
+      ],
+      "must_not_match": [
+        "Peter moved R5,000,000.00 into his own Money Maximiser 63077691682 on 16 Nov 2023."
+      ],
       "correction": "Peter moved R5,000,000.00 from 55270018789 into his own Money Maximiser 63077691682 on 16 Nov 2023; it came back on 27 Mar 2025. His own money, not a hidden source.",
       "withdrawn": "2026-10-06",
       "source": "docs/strategic/CONSOLIDATED_INVESTIGATION_REPORT_2026_10_05.md §5 item 5",
@@ -65,7 +96,13 @@
     },
     {
       "id": "peter-no-email-admission",
-      "pattern": "(?i)(by his own admission|admits?|admitted|claims?|represented)[^.\\n]{0,60}(doesn.t|does not|do not) use (email|computers)",
+      "pattern": "(?i)(by his own admission|admits?|admitted|claims?|represented|sworn|swore|deposed|told the court)[^.\\n]{0,60}(doesn.t|does not|do not) use (email|computers)",
+      "must_match": [
+        "Either Peter received them (contradicting his sworn \"doesn't use email or computers\" claim)"
+      ],
+      "must_not_match": [
+        "If Peter does not use email or computers, put the dilemma conditionally."
+      ],
       "correction": "No source has been located in Peter's papers for 'doesn't use email or computers'. Put the impersonation dilemma conditionally.",
       "withdrawn": "2026-08-01",
       "source": "docs/strategic/UPDATED_RECORDS_BRIEFING_2026_08_01.md §2.6",
@@ -74,6 +111,12 @@
     {
       "id": "shopify-audit-trail-deleted",
       "pattern": "(?i)(destroy|delet)\\w*[^.\\n]{0,30}shopify audit trails?|shopify audit trails?[^.\\n]{0,20}(destroy|delet)",
+      "must_match": [
+        "She destroyed the Shopify audit trail."
+      ],
+      "must_not_match": [
+        "On 22 May 2025 Shopify orders were rerouted to Pastel, a stop rather than a wipe."
+      ],
       "correction": "On 22 May 2025 Shopify orders were rerouted to Pastel. Plead it as a stop, not a wipe.",
       "withdrawn": "2026-08-01",
       "source": "docs/routine/memos/04_VERIFIED_CLAIMS.md C2",
@@ -82,6 +125,13 @@
     {
       "id": "stock-stolen",
       "pattern": "(?i)R5[.,](4|2)\\s?(M|million|00,000)?[^.\\n]{0,40}(stock|inventory)[^.\\n]{0,20}(stolen|theft|disappear|physically removed)|(stolen|disappeared|physically removed) (stock|inventory)[^.\\n]{0,30}R5[.,](4|2)",
+      "must_match": [
+        "R5.4M stock was stolen.",
+        "R5.2 million inventory disappeared."
+      ],
+      "must_not_match": [
+        "The R5,241,372.98 write-off is an accounting residue. Do not plead it as stolen or missing goods."
+      ],
       "correction": "The R5,241,372.98 SLG write-off is the residue of a never-posted manufacturing journal (96.62% reconciled, GL-confirmed). Do not plead it as stolen or missing goods.",
       "withdrawn": "2026-09-08",
       "source": "docs/audit/PHANTOM_STOCK_ROOT_CAUSE_2026_09_08.md §5",
@@ -90,6 +140,13 @@
     {
       "id": "additive-stock-total",
       "pattern": "R9,599,539\\.63|R22,058,956\\.42",
+      "must_match": [
+        "The proven minimum is R9,599,539.63.",
+        "Combined exposure R22,058,956.42."
+      ],
+      "must_not_match": [
+        "R5.4M and R5,241,372.98 describe one SLG event. Never add them."
+      ],
       "correction": "R5.4M, R5,241,372.98, R1,443,217.78, R2,756,321.85 and R4,199,539.63 describe one SLG event. Never add them.",
       "withdrawn": "2026-07-21",
       "source": "docs/strategic/STOCK_LOSS_SCHEDULE_2026_04_23.md §1a",
@@ -98,6 +155,12 @@
     {
       "id": "no-stock-count-ever",
       "pattern": "(?i)no (physical )?stock counts? (were|was|has been|have been)? ?(ever )?(performed|done|conducted|carried out)",
+      "must_match": [
+        "No physical stock count was ever performed."
+      ],
+      "must_not_match": [
+        "Counts were performed: Prime in March 2021 and a joint RegimA/Salco count on 1 September 2021."
+      ],
       "correction": "Counts were performed: Prime Mar–Jun 2021, joint RegimA/Salco 1 Sep 2021, SOLO 8 Feb 2022. Scope any claim to SLG's/RST's own SA warehouse stock.",
       "withdrawn": "2026-08-15",
       "source": "docs/strategic/STOCK_COUNT_CLAIM_CORRECTION_2026_08_15.md",
@@ -106,6 +169,12 @@
     {
       "id": "salco-uk",
       "pattern": "(?i)salco[^.\\n]{0,40}\\b(UK|United Kingdom)\\b",
+      "must_match": [
+        "Salco is the UK fulfilment channel."
+      ],
+      "must_not_match": [
+        "Salco is salco.co.za, a South African logistics provider."
+      ],
       "correction": "Salco is salco.co.za, a South African logistics provider.",
       "withdrawn": "2026-08-15",
       "source": "docs/strategic/STOCK_COUNT_CLAIM_CORRECTION_2026_08_15.md",
@@ -114,6 +183,12 @@
     {
       "id": "rst-phantom-figures",
       "pattern": "(?i)\\bRST\\b[^.\\n]{0,40}(R1,443,217\\.78|R2,756,321\\.85)",
+      "must_match": [
+        "RST phantom finished goods of R1,443,217.78."
+      ],
+      "must_not_match": [
+        "R1,443,217.78 and R2,756,321.85 are SLG finished-goods figures, not RST."
+      ],
       "correction": "R1,443,217.78 and R2,756,321.85 are SLG finished-goods figures (7700/000), not RST.",
       "withdrawn": "2026-07-09",
       "source": "docs/strategic/STOCK_LOSS_SCHEDULE_2026_04_23.md (correction notice 2026-07-09)",
@@ -122,6 +197,12 @@
     {
       "id": "fnb-7jun-card-alerts",
       "pattern": "(?i)(FNB|Temporary Block)[^.\\n]{0,80}alerts?[^.\\n]{0,40}(corroborat|confirm)|corroborat\\w*[^.\\n]{0,40}(FNB|Temporary Block)[^.\\n]{0,40}alerts?|(six|eight)\\s+FNB[^.\\n]{0,60}alerts?\\s+dated\\s+7\\s+June",
+      "must_match": [
+        "Six FNB alerts dated 7 June corroborate the card cancellation."
+      ],
+      "must_not_match": [
+        "The alerts are addressed to jax@regima.zone and concern card ending 5191."
+      ],
       "correction": "The FNB 'Transaction declined due to Temporary Block' alert set does not corroborate a 7 June 2025 cancellation of Daniel's cards. All 50 alerts are addressed to jax@regima.zone (Jacqueline), none to Daniel; all concern card ending 5191, which EVENT_092 attributes to Jacqui's RWD card (62323196362) blocked by Peter on 12 June 2025; and the series begins 1 June 2025, before the claimed date. Cite it only as evidence of a block affecting Jacqueline's card from 1 June 2025. The 7 June date for EVENT_012 rests on settlement clause 2.3.1 (a reimbursement start date) alone; no primary cancellation notice is held.",
       "withdrawn": "2026-10-09",
       "source": "case_2025_137857/03_analysis/PREMEDITATION_CHAIN_SAGE_LOCKOUT_TO_STOCK_REMOVAL_2026-07-22.md correction note (2026-10-09); docs/exchange-evidence/card_cancellation.md",
@@ -130,6 +211,12 @@
     {
       "id": "tb-246m-working-copy",
       "pattern": "(?i)(18 Feb(ruary)? 2024|246,?372,?00[34]|R246(\\.4)?M)[^\\n]{0,160}((?<!not a )(?<!not a corrupted )working copy|scale[- ]corrupt|×\\s?1,?000[- ]corrupt|fabricat\\w* variant|abandoned)|((?<!not a )(?<!not a corrupted )working copy|scale[- ]corrupt\\w*|fabricat\\w* variant)[^\\n]{0,160}(18 Feb(ruary)? 2024|246,?372,?00[34])",
+      "must_match": [
+        "The 18 Feb 2024 file is a working copy with a scale-corrupt balance."
+      ],
+      "must_not_match": [
+        "The 18 Feb 2024 SLG trial balance is not a working copy and not a corrupted working copy."
+      ],
       "correction": "The 18 Feb 2024 SLG trial balance ('TB SL 2023 to 2024.xlsx') is a print of the live books, not a corrupted working copy or fabrication variant. Both complete FY2024 general-ledger prints carry journal 789 (22 Nov 2023, net CR R236,095,233.54 of mis-scaled raw-material values to 2100/000) and a 2100/000 running balance of -R246,372,003.80 on 18 Feb 2024, exactly the file's figure. The journal was reversed at year end, and FY2024 was closed at least twice (CR R440,961.47 vs DR R6,159,023.12). Its link to Bantjies' 'R246k' query is unestablished.",
       "withdrawn": "2026-10-10",
       "source": "docs/audit/PHANTOM_STOCK_ROOT_CAUSE_ADDENDUM4_2026_10_10.md",
@@ -138,6 +225,12 @@
     {
       "id": "conversion-never-posted-any-year",
       "pattern": "(?i)never (been )?(posted|run)[^.\\n]{0,30}in any (financial )?year|(eight|8) years of manufacturing accounting never performed|(conversion|manufactur\\w*) journal[^.\\n]{0,80}never (posted|run)[^.\\n]{0,80}(eight|8) (financial )?years",
+      "must_match": [
+        "Eight years of manufacturing accounting never performed."
+      ],
+      "must_not_match": [
+        "SLG posted manufacture bills from Mar 2022 to 25 Jan 2024 and none in FY2025."
+      ],
       "correction": "Manufacture journals were posted in SLG's books from Mar 2022 to 25 Jan 2024 (FY2024: 561 lines, 67 bills, BILL0529-BILL0595) and none in FY2025; the 2400/000 recovery account was never used, and RST posted none in FY2024-FY2025. Plead the years without conversion and the unused recovery account, not 'never posted in any year' or 'eight years'.",
       "withdrawn": "2026-10-10",
       "source": "docs/audit/PHANTOM_STOCK_ROOT_CAUSE_ADDENDUM3_2026_10_08.md; docs/strategic/OLX_COMPLETE_SYNC_2026_10_10.md",
@@ -146,6 +239,12 @@
     {
       "id": "no-count-sheet-survives",
       "pattern": "(?i)no (count sheet|copy)[^.\\n]{0,120}surviv(?![^.\\n]{0,40}email corpus)",
+      "must_match": [
+        "No count sheet survives."
+      ],
+      "must_not_match": [
+        "No count sheet survives in the email corpus, which holds no attachments."
+      ],
       "correction": "The June 2021 Prime stock-take feedback report is held (caselex-sync support/ext_xlsx_key_files/Strategic_Logistics_CC/'Copy of Strategic stock take feedback report Analysed.xlsx': 2 Jun 2021 against 22 Feb 2021, net variance R22,782.59), and fincosys's Prime stock tracker of 5 Sep 2026 reproduces it. Only the email archive lacks count sheets, because it holds no attachments.",
       "withdrawn": "2026-10-19",
       "source": "docs/strategic/CROSS_REPO_FINDINGS_SYNC_2026_10_19.md §4; caselex-sync 2025-137857/ledger_baseline/12_PPM_CONVERSION_EVENTS_REGISTER.md §5.6",
@@ -154,6 +253,12 @@
     {
       "id": "rst-is-the-manufacturer",
       "pattern": "(?i)(\\bRST\\b|RegimA Skin Treatments( CC)?)(\\s*\\((RegimA Skin Treatments|RST)\\))?\\**\\s*([(\\[|:—–-]|<br\\s*/?>|\\bis the\\b|\\boperated as the\\b|,\\s*the\\b)\\s*\\**\\s*(product |profitable )?manufactur(er|ing)(?!\\s*(cost|recovery|bill|journal|account|module))|manufacturer\\s*\\((RST|RegimA Skin Treatments)|\\bmanufacturer:\\**\\s*RegimA Skin Treatments|\\bRST manufactur(es|ing (staff|employees|output|practices|hub|entity))\\b|(\\bRST\\b|RegimA Skin Treatments)[^.\\n]{0,40}\\bmanufacturing source\\b",
+      "must_match": [
+        "RST was the manufacturing source for the group."
+      ],
+      "must_not_match": [
+        "Prime Product Manufacturing is SLG's manufacturing source."
+      ],
       "correction": "RST (RegimA Skin Treatments CC) has never manufactured. Strategic Logistics CC (SLG) is the manufacturing principal: it orders from and pays the contract manufacturer Prime Product Manufacturing (the bank shows SLG R40.4m against RST R20.3m, RST's last PPM payment in 2018), buys R23.9m of the R27.0m of raw materials and packaging, claims the input VAT, is named consignor on every customs record, and DR H's own books name it supplier 2017-2020. RST buys finished stock from SLG. The label began as the heading 'RST (Manufacturing Hub)' over an October 2025 analysis of the group's own trial balances (rzonedevops/analysis 6195a97), whose tables put the manufacture-cost accounts under SLG.",
       "withdrawn": "2026-10-21",
       "source": "case owner, 2026-10-21; fincosys/fincosys-core reports/parties/SLG_RST_ATTRIBUTION.md (§2a lineage) and reports/parties/SLG_RST_ATTRIBUTION_TIMELINE.md",
@@ -162,6 +267,13 @@
     {
       "id": "slg-is-a-warehouse",
       "pattern": "(?i)(\\bSLG\\b|Strategic Logistics)[^\\n]{0,80}(warehouse\\s*/\\s*logistics|warehouse, stock holding|third-party warehousing)|\\bSLG\\s*\\(warehouse\\)|Strategic Logistics[^.\\n]{0,30}\\b(is|as) (a |the )?(warehouse|logistics (provider|arm|company))",
+      "must_match": [
+        "| SLG | Warehouse / logistics | R5.4M stock |"
+      ],
+      "must_not_match": [
+        "Salco runs a warehouse/logistics operation in Cape Town.",
+        "SOLO provides third-party warehousing in the UK."
+      ],
       "correction": "SLG (Strategic Logistics CC) is not a warehouse or logistics provider holding stock for RST/RWD. It is the group's manufacturing principal: it contracts and pays the manufacturer, buys the inputs, claims the input VAT and exports (fincosys-core SLG_RST_ATTRIBUTION). The 'warehouse / logistics' role was written by an AI session on 2026-03-23 (ad-res-j7 6d58947) with a cited source file held in no branch.",
       "withdrawn": "2026-10-21",
       "source": "case owner, 2026-10-21; fincosys/fincosys-core reports/parties/SLG_RST_ATTRIBUTION.md",
@@ -170,6 +282,12 @@
     {
       "id": "strategic-logistics-group",
       "pattern": "(?i)Strategic Logistics Group",
+      "must_match": [
+        "Payments were booked to Strategic Logistics Group."
+      ],
+      "must_not_match": [
+        "The entity is Strategic Logistics CC (SLG), a close corporation."
+      ],
       "correction": "The entity is Strategic Logistics CC (SLG), registered as a close corporation. 'Strategic Logistics Group' is a name first written in rzonedevops/analysis on 2025-10-09 (2a2b763) and no record carries it.",
       "withdrawn": "2026-10-21",
       "source": "fincosys/fincosys-core reports/parties/SLG_RST_ATTRIBUTION.md §2a",
@@ -178,6 +296,12 @@
     {
       "id": "bantjes-paid-from-df-savings",
       "pattern": "(?i)(62089474309|DF (FNB )?savings)(?:[^.\\n]|\\.(?=\\d)){0,120}Bantj|Bantj(?:[^.\\n]|\\.(?=\\d)){0,120}(62089474309|DF (FNB )?savings)",
+      "must_match": [
+        "| ACC-BTN-2026-107796 | 2019-10-03 | **DF FNB Savings 62089474309** | −5,000.00 | 92226T2F | D J BANTJES |"
+      ],
+      "must_not_match": [
+        "DF savings 62089474309 is held. Bantjes was paid by RST."
+      ],
       "correction": "FNB advices 92226T2F and S2SFGX6F are RST's own R5,000 payments to D J Bantjes of 30 Sep and 30 Nov 2019 (RST FNB 55270035642, statements 211 and 213). The DF savings debits of 3 Oct and 2 Dec 2019 went to DF's own current account and to RZI.",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
@@ -186,6 +310,12 @@
     {
       "id": "addarory-literal-1700493",
       "pattern": "1,700,493\\.86|294,572\\.86|5,695,001\\.61",
+      "must_match": [
+        "Literal-name Addarory payments total R1,700,493.86."
+      ],
+      "must_not_match": [
+        "Literal-name Addarory payments are R1,664,060.81."
+      ],
       "correction": "Literal-name Addarory payments: 8, R1,664,060.81 (SLG R1,405,921.00; RST 6 payments, R258,139.81). With the alias payments the channel total is R5,658,568.56.",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
@@ -193,7 +323,15 @@
     },
     {
       "id": "prime-2023-2026-11234012",
-      "pattern": "11,234,012\\.25|2,943,973\\.26",
+      "pattern": "(?i)11,234,012\\.25|2,943,973\\.26|Prime[^.\\n]{0,40}\\bR11\\.23 ?M\\b|\\bR11\\.23 ?M\\b[^.\\n]{0,15}\\bPrime|\\bR11\\.23 ?M and R1\\.43 ?M\\b",
+      "must_match": [
+        "SLG paid Prime R11.23M and Proficos R1.43M in 2023-2026.",
+        "The old total was R11,234,012.25.",
+        "refuted outright (R11.23M and R1.43M paid 2023-2026"
+      ],
+      "must_not_match": [
+        "SLG paid Prime R11.11M and Proficos R1.91M."
+      ],
       "correction": "SLG paid Prime R11,112,748.09 in 2023–2026; 2025: 8 payments, R2,822,709.10.",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
@@ -201,7 +339,14 @@
     },
     {
       "id": "proficos-2023-2026-1425844",
-      "pattern": "1,425,844\\.96",
+      "pattern": "(?i)1,425,844\\.96|Proficos[^.\\n]{0,40}\\bR1\\.43 ?M\\b|\\bR1\\.43 ?M\\b[^.\\n]{0,15}\\bProficos",
+      "must_match": [
+        "R11.23M to Prime + R1.43M to Proficos.",
+        "The old Proficos total was R1,425,844.96."
+      ],
+      "must_not_match": [
+        "SLG paid Prime R11.11M and Proficos R1.91M."
+      ],
       "correction": "SLG paid Proficos R1,907,852.46 in 2023–2026; R1,425,844.96 omits the 29 Aug 2025 R482,007.50.",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
@@ -210,6 +355,20 @@
     {
       "id": "slg-fy2022-afs-inventory-6474658",
       "pattern": "(?i)inventor(?:(?!bank|cash)[^\\n]){0,60}?6,474,658|6,474,658[*\\s]{0,4}(?:\\(\\s*|as\\s+)?inventor|FY\\s?2022(?:(?!FY\\s?20)[^\\n]){0,60}retained loss (of )?R?14,604",
+      "must_match": [
+        "SLG FY2022 AFS inventory R6,474,658.",
+        "inventory −642,704.68 vs 6,474,658",
+        "| Total inventory (7500–7750) | **−642,704.68** | **6,474,658** |",
+        "SLG FY2022 AFS: inventory **R6,474,658**.",
+        "SLG FY2022 AFS: retained loss R14,604."
+      ],
+      "must_not_match": [
+        "SLG FY2022 AFS: inventory R8,344,000, bank and cash R6,474,658, loss for the year R6,978 (FY2021: R14,604).",
+        "SLG FY2022 AFS: inventory R8,344,000; bank and cash R6,474,658.",
+        "SLG FY2022 AFS: bank and cash R6,474,658; inventory R8,344,000.",
+        "SLG FY2022 AFS: bank and cash R6,474,658, inventory R8,344,000.",
+        "SLG FY2021 AFS: retained loss R14,604."
+      ],
       "correction": "SLG's signed FY2022 AFS show inventory R8,344,000 and a loss for the year of R6,978; R6,474,658 is bank and cash and R14,604 the FY2021 loss.",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
@@ -218,6 +377,12 @@
     {
       "id": "sars-prov-653827-unmatched",
       "pattern": "653,827\\.28",
+      "must_match": [
+        "Unmatched SARS PROV of R653,827.28."
+      ],
+      "must_not_match": [
+        "One RST provisional-tax payment of R326,913.64 on 25 Feb 2021."
+      ],
       "correction": "One RST provisional-tax payment of R326,913.64 on 25 Feb 2021, held as two notification copies (trace FB8Y946G).",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
@@ -225,7 +390,15 @@
     },
     {
       "id": "rwd-7700-2887676-aje",
-      "pattern": "(?i)2,887,676\\.80[^\\n]{0,60}(written|to zero|to nil|→ ?0|to R0)|(written|nil)[^\\n]{0,60}2,887,676\\.80",
+      "pattern": "(?i)2,887,676\\.80[^\\n]{0,60}(written|to zero|to nil|→ ?0|to R0)|\\bwritten (?:down )?to (?:zero|nil|R0)\\b(?:(?!\\d{1,3}(?:,\\d{3})+\\.\\d{2})[^\\n]){0,120}2,887,676\\.80",
+      "must_match": [
+        "| RWD finished goods written to zero (FY2020 AJE — different year, genuinely additive) | R2,887,676.80 | Strong (this audit, Appendix C) |",
+        "RWD 7700/000 Finished Goods: R2,887,676.80 written down to R0"
+      ],
+      "must_not_match": [
+        "The AJE wrote RWD finished goods of R141,163.95 to nil; R2,887,676.80 is in the first column pair.",
+        "written to zero: R141,163.95 (the R2,887,676.80 sits in the first column)"
+      ],
       "correction": "RWD's FY2020 AJE wrote 7700/000 Finished Goods of R141,163.95 to nil; R2,887,676.80 is in the workbook's first column pair.",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
@@ -234,6 +407,12 @@
     {
       "id": "rwd-sav-fy2425-4288883",
       "pattern": "4,288,883\\.75",
+      "must_match": [
+        "RWD savings paid out R4,288,883.75 in FY2024/25."
+      ],
+      "must_not_match": [
+        "RWD savings 62836164880 paid out R5,288,883.75 in FY2024/25."
+      ],
       "correction": "RWD savings 62836164880 paid out R5,288,883.75 in FY2024/25 (five transfers incl. R1,000,000 on 18 Apr 2024).",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
@@ -242,6 +421,12 @@
     {
       "id": "slg-absa-main-flows-2025-26",
       "pattern": "11,938,963\\.47|11,943,947\\.36|2,509,948\\.87|1,131,268\\.29|3,641,217\\.16|9,305,513\\.04",
+      "must_match": [
+        "Totals across all 13 statements: R11,938,963.47 in."
+      ],
+      "must_not_match": [
+        "SLG ABSA 4112315016: R12,460,649.26 in and R12,466,083.15 out."
+      ],
       "correction": "SLG ABSA 4112315016, stmts 15–27: R12,460,649.26 in (WWD R10,152,000.00; Reg R1,747,000.00; Strat Inv R302,000.00; card R259,649.26) and R12,466,083.15 out, per the printed account summaries. Appendix E distributors in that account: R2,716,901.04; others R1,836,535.21.",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
@@ -250,10 +435,37 @@
     {
       "id": "core-inventory-exposure-15611759",
       "pattern": "15,611,759\\.72",
+      "must_match": [
+        "Core inventory-fraud exposure R15,611,759.72."
+      ],
+      "must_not_match": [
+        "No core inventory-exposure total survives. State each row on its own."
+      ],
       "correction": "No core inventory-exposure total survives: the RWD row is R141,163.95, the FY2020 Boxes divergence was refuted on 2026-09-22, and R5,241,372.98 is an accounting residue, not a loss. State each row on its own.",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
       "banner": "The R15,611,759.72 'core inventory-fraud exposure' is withdrawn; no total survives."
+    },
+    {
+      "id": "r10-6m-extraction",
+      "pattern": "(?i)(?:extract\\w*|seiz\\w*|strip\\w*|stole|stolen|theft|loot\\w*|siphon\\w*|misappropriat\\w*|plunder\\w*|embezzl\\w*|divert\\w*|diversion)[^.\\n|]{0,80}R\\s?10(?:\\.6\\d*\\s?(?:M\\b|m\\b|million)|[ ,]624[ ,]131(?:\\.18)?)\\+?|R\\s?10(?:\\.6\\d*\\s?(?:M\\b|m\\b|million)|[ ,]624[ ,]131(?:\\.18)?)\\+?[^.\\n|]{0,80}(?:extract\\w*|seiz\\w*|strip\\w*|stole|stolen|theft|loot\\w*|siphon\\w*|misappropriat\\w*|plunder\\w*|embezzl\\w*|divert\\w*|diversion)",
+      "must_match": [
+        "5. Use the court order to extract R10.6M+ from the company accounts",
+        "| 04 | Timeline of Financial Sabotage | March SARS request through September R10.6M extraction |",
+        "  → Enabled R10.6M extraction (Sep 2025)",
+        "| **Proportionality** | R500K reimbursement used to justify R10.6M seizure | 0.95 |",
+        "used the resulting order to extract R10,624,131.18 from the companies",
+        "Within 8 days, R10.6 million was extracted from the company accounts."
+      ],
+      "must_not_match": [
+        "On 3 and 11 Sep 2025, R10,624,131.18 was moved from four current accounts to savings accounts.",
+        "SLG sales of about R9-10.6M.",
+        "| R10.6M | transfers to savings |"
+      ],
+      "correction": "The four transfers of 3 and 11 Sep 2025 (R10,624,131.18) moved money from each company's FNB current account to savings: RST R3,090,000.00 to RST savings 62134839127, SLG R640,000.00 to SLG savings 62593375829, VVA R1,730,000.00 to VVA savings 62812835744 (FNB print of 11 Sep 2025), and RWD R5,164,131.18 out of RWD current 62323196362 'to savings' on 3 Sep (arrival not held). None is shown to have left its company. State them as transfers to savings, not as an extraction, seizure or theft.",
+      "withdrawn": "2026-10-28",
+      "source": "M-REF/04_FINANCIAL_SABOTAGE_TIMELINE.md Phase 7; docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md §7; evidence/2025-11-14-batch-3/CCE20250911_0001-0003",
+      "banner": "The R10.6M (R10,624,131.18) of 3-11 Sep 2025 was moved into the companies' savings accounts; it is not an extraction (RWD's R5.16M arrival not held)."
     }
   ]
 }

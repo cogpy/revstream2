@@ -3,11 +3,15 @@
 Guard against withdrawn claims re-entering the repository
 
 Key features:
-- Reads docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json (patterns, corrections, sources)
+- Reads docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json (patterns, corrections, sources,
+  and the must_match / must_not_match examples each pattern has to satisfy)
 - --diff BASE: fails if lines added since BASE repeat a withdrawn claim (CI mode)
 - --report: counts the copies still in tracked files, per claim and per directory
 - Lines citing a claim as withdrawn or corrected, and verbatim/archive paths, are allowed
-- A claim hard-wrapped across the lines of one prose paragraph (.md/.txt/.html) is caught too
+- A claim hard-wrapped across the lines of one prose paragraph, or across the
+  lines of a fenced diagram, is caught too (.md/.txt/.html). A fence is a diagram
+  when it contains a box-drawing character (the form agents copy). Plain code
+  stays one statement per line. A diagram is not joined with the prose outside it
 - --root DIR / --register FILE: scan another repository against this (or another) register
 """
 import argparse
@@ -28,6 +32,85 @@ def load_register():
     reg = json.loads(Path(REGISTER).read_text(encoding="utf-8"))
     claims = [dict(c, rx=re.compile(c["pattern"])) for c in reg["claims"]]
     return reg, claims, re.compile(reg["allow_line_markers"])
+
+
+def example_errors(reg, claims):
+    """Each pattern must catch the forms it was written for and miss the correction.
+
+    The examples live in the register, next to the pattern. A pattern edit that
+    misses a must_match form, or that matches a must_not_match correction, fails
+    here. exemption_must_not_match lines repeat a claim and must not be exempted
+    by allow_line_markers. exemption_must_match lines are real corrections and
+    must stay exempted.
+    """
+    errors = []
+    where = "docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json"
+    try:
+        allow = re.compile(reg["allow_line_markers"])
+    except re.error as exc:
+        return [f"allow_line_markers in {where} does not compile: {exc}"]
+
+    def require_lines(key, missing):
+        lines = reg.get(key)
+        if not lines:
+            errors.append(missing)
+            return []
+        return lines
+
+    still_fail = require_lines(
+        "exemption_must_not_match",
+        f"Add exemption_must_not_match to {where}: lines that repeat a withdrawn claim and "
+        "must not be exempted. 'The R10.6M extraction was restated by counsel.' is one.",
+    )
+    still_allowed = require_lines(
+        "exemption_must_match",
+        f"Add exemption_must_match to {where}: corrections that repeat a withdrawn claim's "
+        "words and must stay exempted. The R10.6M line ending 'not an extraction' is one.",
+    )
+    for text in still_fail:
+        if allow.search(text):
+            errors.append(
+                f"allow_line_markers in {where} exempts a line that repeats a withdrawn claim. "
+                f"A word like 'restated' is not a correction. Line: {text}"
+            )
+        elif not any(c["rx"].search(text) for c in claims):
+            errors.append(
+                f"exemption_must_not_match in {where} does not repeat a registered claim, so it "
+                f"does not constrain the marker. Line: {text}"
+            )
+    for text in still_allowed:
+        if not allow.search(text):
+            errors.append(
+                f"allow_line_markers in {where} no longer exempts a correction. Keep the specific "
+                f"marker (for example 'not an extraction'), not a broad word. Line: {text}"
+            )
+        elif not any(c["rx"].search(text) for c in claims):
+            errors.append(
+                f"exemption_must_match in {where} does not repeat a registered claim. Line: {text}"
+            )
+    for c in claims:
+        cid = f"{where} claim {c['id']}"
+        must = c.get("must_match") or []
+        must_not = c.get("must_not_match") or []
+        if not must or not must_not:
+            errors.append(
+                f"{cid}: add must_match (a form the pull request must reject) and must_not_match "
+                "(the correction, which the pattern must not catch)."
+            )
+            continue
+        for text in must:
+            if not c["rx"].search(text):
+                errors.append(
+                    f"{cid}: pattern does not match must_match. Widen the pattern, or fix the example. "
+                    f"Form: {text}"
+                )
+        for text in must_not:
+            if c["rx"].search(text):
+                errors.append(
+                    f"{cid}: pattern matches a correction in must_not_match. Narrow the pattern and "
+                    f"use the claim's correction field. Wording: {text}"
+                )
+    return errors
 
 
 def path_checked(path, reg):
@@ -64,33 +147,72 @@ def violations(path, lines, claims, allow):
 
 
 BLOCK_START = re.compile(r"\s*([-*+]|\d+[.)]|#+)\s")  # a list item or heading starts a new unit
+BOX_DRAWING = set("│┌┐└┘├┤┬┴┼▼▲►◄─")  # a fenced diagram, as opposed to a code sample
 
 
 def joinable(text):
-    """A line that continues prose: not blank, not a table row, not a code fence."""
+    """A line that continues a paragraph or a diagram: not blank, not a table row, not a fence marker."""
     t = text.strip()
     return bool(t) and not t.startswith(("|", "```"))
+
+
+def prose_runs(lines):
+    """Paragraphs of (line_no, stripped) from `lines`.
+
+    A fenced region is included only when it is a diagram (some line contains a
+    box-drawing character). Those lines are not joined with the prose outside the
+    fence. Plain code is left out: joining it glues unrelated statements.
+    """
+    paragraphs, run, fence, in_fence = [], [], [], False
+
+    def flush(buf):
+        paragraphs.append(buf)
+        return []
+
+    def flush_fence():
+        if any(any(ch in BOX_DRAWING for ch in text) for _, text in fence):
+            sub = []
+            for no, text in fence:
+                if not joinable(text) or BLOCK_START.match(text):
+                    paragraphs.append(sub)
+                    sub = []
+                if joinable(text):
+                    sub.append((no, text.strip()))
+            paragraphs.append(sub)
+
+    for no, text in lines:
+        if text.strip().startswith("```"):
+            if in_fence:
+                flush_fence()
+                fence = []
+                in_fence = False
+            else:
+                run = flush(run)
+                in_fence = True
+            continue
+        if in_fence:
+            fence.append((no, text))
+            continue
+        if not joinable(text) or BLOCK_START.match(text):
+            run = flush(run)
+        if joinable(text):
+            run.append((no, text.strip()))
+    if in_fence:
+        flush_fence()
+    paragraphs.append(run)
+    return paragraphs
 
 
 def wrapped_violations(path, wanted, claims, allow, struck):
     """Claims hard-wrapped across lines of one paragraph, which no single line matches.
 
-    Each paragraph (a run of joinable lines outside code fences; a list item or heading
-    starts a new one) holding a line in `wanted` is joined with spaces and searched
-    once per claim; only a match that crosses a join is reported, at its first line. It is skipped when a line it touches carries an allow marker,
+    Each paragraph from `prose_runs` that holds a line in `wanted` is joined with
+    spaces and searched once per claim; only a match that crosses a join is reported,
+    at its first line. It is skipped when a line it touches carries an allow marker,
     is struck through, or repeats the claim on its own (the per-line check already
     reports that), and reported only when it touches a line in `wanted`.
     """
-    paragraphs, run, fenced = [], [], False
-    for no, text in read_lines(path):
-        if text.strip().startswith("```"):
-            fenced = not fenced
-        if fenced or not joinable(text) or BLOCK_START.match(text):
-            paragraphs.append(run)
-            run = []
-        if not fenced and joinable(text):
-            run.append((no, text.strip()))
-    paragraphs.append(run)
+    paragraphs = prose_runs(read_lines(path))
     for group in paragraphs:
         if len(group) < 2 or not wanted.intersection(no for no, _ in group):
             continue
@@ -135,7 +257,7 @@ def prefilter_pattern(pattern):
     pattern = re.sub(r"\(\?<[!=][^)]*\)", "", pattern)  # lookbehinds would no longer be fixed-width
     # the checks strip indentation before joining lines, so allow for it in bounded gaps
     pattern = re.sub(r"\{(\d+),(\d+)\}", lambda m: "{%s,%d}" % (m.group(1), int(m.group(2)) + 200), pattern)
-    return pattern.replace("(?i)", "").replace("[^.\\n]", "[^.]").replace("[^\\n]", "[\\s\\S]").replace(" ", "\\s*")
+    return pattern.replace("(?i)", "").replace("[^.\\n|]", "[^.|]").replace("[^.\\n]", "[^.]").replace("[^\\n]", "[\\s\\S]").replace(" ", "\\s*")
 
 
 def candidate_files(reg, claims):
@@ -151,22 +273,32 @@ def candidate_files(reg, claims):
     if not shutil.which("rg"):
         print("⚠️  ripgrep not found: checking every tracked file in full (slow)")
         return dict.fromkeys(tracked)
-    combined = "|".join("(?:%s)" % prefilter_pattern(c["pattern"]) for c in claims)
-    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
-        f.write(combined)
     globs = sum([["-g", g] for g in reg["file_globs"]], [])
-    r = subprocess.run(["rg", "-n", "-i", "-P", "-U", "--null", "--no-heading", "--no-messages",
-                        "-f", f.name, *globs, "."], cwd=str(ROOT), capture_output=True, text=True)
-    Path(f.name).unlink()
-    if r.returncode not in (0, 1):
-        print(f"⚠️  ripgrep prefilter failed, checking every tracked file in full (slow): {r.stderr.strip()[:200]}")
+
+    def run(patterns):
+        with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
+            f.write("|".join("(?:%s)" % prefilter_pattern(c) for c in patterns))
+        r = subprocess.run(["rg", "-n", "-i", "-P", "-U", "--null", "--no-heading", "--no-messages",
+                            "-f", f.name, *globs, "."], cwd=str(ROOT), capture_output=True, text=True)
+        Path(f.name).unlink()
+        return r
+
+    patterns = [c["pattern"] for c in claims]
+    runs = [run(patterns)]
+    if runs[0].returncode not in (0, 1):
+        # the combined expression can exceed PCRE2's compile limit; one run per claim stays within it
+        runs = [run([p]) for p in patterns]
+    bad = [r for r in runs if r.returncode not in (0, 1)]
+    if bad:
+        print(f"⚠️  ripgrep prefilter failed, checking every tracked file in full (slow): {bad[0].stderr.strip()[:200]}")
         return dict.fromkeys(tracked)
     hits = collections.defaultdict(set)
-    for line in r.stdout.splitlines():
-        p, _, rest = line.partition("\0")
-        no = rest.split(":", 1)[0]
-        if no.isdigit():
-            hits[p[2:] if p.startswith("./") else p].add(int(no))
+    for r in runs:
+        for line in r.stdout.splitlines():
+            p, _, rest = line.partition("\0")
+            no = rest.split(":", 1)[0]
+            if no.isdigit():
+                hits[p[2:] if p.startswith("./") else p].add(int(no))
     return {p: hits[p] for p in tracked if p in hits}
 
 
@@ -239,6 +371,11 @@ def main():
     elif (ROOT / "docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json").exists():
         REGISTER = ROOT / "docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json"
     reg, claims, allow = load_register()
+    errors = example_errors(reg, claims)
+    if errors:
+        for error in errors:
+            print(f"❌ {error}")
+        return 2
     if a.diff:
         return run_diff(a.diff, reg, claims, allow)
     return run_report(reg, claims, allow, a.tsv)
