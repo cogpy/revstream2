@@ -282,7 +282,7 @@ def prefilter_pattern(pattern):
     # the checks strip indentation before joining lines, so allow for it in bounded gaps
     pattern = re.sub(r"\{(\d+),(\d+)\}", lambda m: "{%s,%d}" % (m.group(1), int(m.group(2)) + 200), pattern)
     pattern = pattern.replace("(?i)", "").replace("[^.\\n|]", "[^.|]").replace("[^.\\n]", "[^.]").replace("[^\\n]", "[\\s\\S]")
-    return re.sub(r"\\.|\[(?:\\.|[^\]])*\]| ", lambda m: "[\\s│┃║]*" if m.group() == " " else m.group(), pattern)
+    return re.sub(r"\\.|\[(?:\\.|[^\]\\])*\]| ", lambda m: "[\\s│┃║]*" if m.group() == " " else m.group(), pattern)
 
 
 def candidate_files(reg, claims):
