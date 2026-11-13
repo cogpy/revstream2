@@ -11,7 +11,11 @@ Key features:
 - A claim hard-wrapped across the lines of one prose paragraph, or across the
   lines of a fenced diagram, is caught too (.md/.txt/.html). A fence is a diagram
   when it contains a box-drawing character (the form agents copy). Plain code
-  stays one statement per line. A diagram is not joined with the prose outside it
+  stays one statement per line. A diagram is not joined with the prose outside it.
+  In a box row (text between two vertical borders) the borders are dropped, and
+  a row joins the one above only when it continues it (starts in lower case)
+- A wrapped claim whose joined lines carry an allow marker (a correction split
+  across a line break) is allowed, like the same correction on one line
 - --root DIR / --register FILE: scan another repository against this (or another) register
 """
 import argparse
@@ -148,6 +152,7 @@ def violations(path, lines, claims, allow):
 
 BLOCK_START = re.compile(r"\s*([-*+]|\d+[.)]|#+)\s")  # a list item or heading starts a new unit
 BOX_DRAWING = set("│┌┐└┘├┤┬┴┼▼▲►◄─")  # a fenced diagram, as opposed to a code sample
+BOX_ROW = re.compile(r"^\s*[│┃║]\s*(.*?)\s*[│┃║]\s*$")  # a row inside a drawn box: │ text │
 
 
 def joinable(text):
@@ -173,6 +178,17 @@ def prose_runs(lines):
         if any(any(ch in BOX_DRAWING for ch in text) for _, text in fence):
             sub = []
             for no, text in fence:
+                row = BOX_ROW.match(text)
+                if row:
+                    # Rows of a box are separate labels ("│ Salco: Cape Town │" / "│ SOLO: UK │")
+                    # unless a row continues the sentence above it, which starts in lower case.
+                    content = row.group(1)
+                    if not (content[:1].islower() and sub):
+                        paragraphs.append(sub)
+                        sub = []
+                    if content:
+                        sub.append((no, content))
+                    continue
                 if not joinable(text) or BLOCK_START.match(text):
                     paragraphs.append(sub)
                     sub = []
@@ -209,8 +225,10 @@ def wrapped_violations(path, wanted, claims, allow, struck):
     Each paragraph from `prose_runs` that holds a line in `wanted` is joined with
     spaces and searched once per claim; only a match that crosses a join is reported,
     at its first line. It is skipped when a line it touches carries an allow marker,
-    is struck through, or repeats the claim on its own (the per-line check already
-    reports that), and reported only when it touches a line in `wanted`.
+    when the touched lines carry one once joined ("... to savings, not" / "an
+    extraction."), when a line is struck through, or when a line repeats the claim
+    on its own (the per-line check already reports that). It is reported only when
+    it touches a line in `wanted`.
     """
     paragraphs = prose_runs(read_lines(path))
     for group in paragraphs:
@@ -227,6 +245,8 @@ def wrapped_violations(path, wanted, claims, allow, struck):
                 if len(touched) < 2 or not wanted.intersection(no for no, _ in touched):
                     continue
                 if any(no in struck or allow.search(t) or c["rx"].search(t) for no, t in touched):
+                    continue
+                if allow.search(" ".join(t for _, t in touched)):
                     continue
                 yield path, touched[0][0], c, " / ".join(t for _, t in touched)
 
@@ -253,11 +273,16 @@ def tracked_files():
 
 
 def prefilter_pattern(pattern):
-    """Loosen a claim pattern so it also matches when hard-wrapped (a superset, for ripgrep -U only)."""
+    """Loosen a claim pattern so it also matches when hard-wrapped (a superset, for ripgrep -U only).
+
+    A space may also be a line break inside a drawn box, so box borders count as spacing.
+    Spaces inside a character class such as [ ,] are left as they are.
+    """
     pattern = re.sub(r"\(\?<[!=][^)]*\)", "", pattern)  # lookbehinds would no longer be fixed-width
     # the checks strip indentation before joining lines, so allow for it in bounded gaps
     pattern = re.sub(r"\{(\d+),(\d+)\}", lambda m: "{%s,%d}" % (m.group(1), int(m.group(2)) + 200), pattern)
-    return pattern.replace("(?i)", "").replace("[^.\\n|]", "[^.|]").replace("[^.\\n]", "[^.]").replace("[^\\n]", "[\\s\\S]").replace(" ", "\\s*")
+    pattern = pattern.replace("(?i)", "").replace("[^.\\n|]", "[^.|]").replace("[^.\\n]", "[^.]").replace("[^\\n]", "[\\s\\S]")
+    return re.sub(r"\\.|\[(?:\\.|[^\]\\])*\]| ", lambda m: "[\\s│┃║]*" if m.group() == " " else m.group(), pattern)
 
 
 def candidate_files(reg, claims):
