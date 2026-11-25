@@ -1,7 +1,7 @@
 {
   "description": "Claims that were withdrawn or refuted after verification. scripts/check_withdrawn_claims.py fails any pull request that adds a line repeating one of them. A line is allowed when it cites the claim as withdrawn or corrected (see allow_line_markers), or sits on a verbatim or archive path (see allow_paths). Each claim carries must_match and must_not_match. The script refuses to run when a pattern misses a must_match form or matches a must_not_match correction. Add a claim here the day it is withdrawn, with both lists.",
-  "updated": "2026-11-12",
-  "mirror_of": "cogpy/ad-res-j7 docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json (2026-11-12). ad-res-j7 is canonical: add claims there first, then copy.",
+  "updated": "2026-11-25",
+  "mirror_of": "cogpy/ad-res-j7 docs/strategic/WITHDRAWN_CLAIMS_REGISTER.json (2026-11-25). ad-res-j7 is canonical: add claims there first, then copy.",
   "allow_line_markers": "(?i)withdrawn|refuted|\\bfalse\\b|corrected|correction|superseded|do not plead|don.t plead|do not cite|do not repeat|not established|\\bnot a director|struck|~~|⛔|if .{0,20}does(n.t| not) use|not (?:shown to be )?an extraction",
   "exemption_must_not_match": [
     "The R10.6M extraction was restated by counsel."
@@ -332,10 +332,10 @@
       "must_not_match": [
         "SLG paid Prime R11.11M and Proficos R1.91M."
       ],
-      "correction": "SLG paid Prime R11,112,748.09 in 2023–2026; 2025: 8 payments, R2,822,709.10.",
+      "correction": "SLG paid Prime at least R15,274,990.40 in 2023–2026 on the statements located (2024: 8 payments, R3,504,960.61; 2025: 10 payments, R3,578,119.76). ABSA cheque statements 1, 2 and 8 are not located.",
       "withdrawn": "2026-10-27",
       "source": "docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md",
-      "banner": "SLG's Prime payments 2023–2026 are R11,112,748.09 (2025: R2,822,709.10)."
+      "banner": "SLG's Prime payments 2023–2026 are at least R15,274,990.40 (2025: R3,578,119.76)."
     },
     {
       "id": "proficos-2023-2026-1425844",
@@ -470,6 +470,63 @@
       "withdrawn": "2026-10-28",
       "source": "M-REF/04_FINANCIAL_SABOTAGE_TIMELINE.md Phase 7; docs/strategic/FACT_REGISTER_CONTRADICTIONS_RESOLVED_2026_10_27.md §7; evidence/2025-11-14-batch-3/CCE20250911_0001-0003",
       "banner": "The R10.6M (R10,624,131.18) of 3-11 Sep 2025 was moved into the companies' savings accounts; it is not an extraction (RWD's R5.16M arrival not held)."
+    },
+    {
+      "id": "rst-paid-elliott-90k",
+      "pattern": "(?i)(?<!from )\\bpa(?:y|ys|id|ying|yment)\\b[^.\\n|]{0,60}?(?:~\\s?|approximately\\s|about\\s|some\\s)?(?:R|ZAR)\\s?(?:90(?:[ ,]000|\\s?k\\b)|89[ ,]836(?:\\.54)?)[^.\\n|]{0,120}?\\bto\\s+Elliott?\\b",
+      "must_match": [
+        "| [EVT-073](./EVT-073.md) | RST pays ~R90k to Elliot Attorneys (11 Sep 2025) |",
+        "EVT-073: RegimA Skin Treatments Pays ~ZAR 90,000 to Elliot Attorneys",
+        "RST paid approximately R90,000 to Elliot Attorneys on 11 September 2025.",
+        "a payment of approximately R90,000 was made from the RegimA Skin Treatments CC bank account (55270035642) to Elliot Attorneys",
+        "title: \"EVT-073: RST Pays ~ZAR 90k to Elliot Attorneys\""
+      ],
+      "must_not_match": [
+        "RST received R89,836.54 from Elliott Attorneys on 11 Sep 2025.",
+        "| 11 Sep 2025 | INTERNET TRF FROM ELLIOT ATTORNEYS | ELLIOT ATTORNEYS | 0.00 | 89,836.54 | 3,099,140.90 |",
+        "RST paid Elliott Attorneys R25,833.95 on 10 Sep 2025 from ABSA 4112241409.",
+        "16 payments to Elliott Attorneys, R478,957.93, 25 Aug 2025 - 15 Apr 2026.",
+        "VVA paid R300,000 to S Munga (ENS Attorneys) on 26 August 2025."
+      ],
+      "correction": "On 11 Sep 2025 RST's FNB account 55270035642 received R89,836.54 FROM Elliott Attorneys (FNB print CCE20250911_0007; the balance rises 3,009,304.36 -> 3,099,140.90). It was not a payment to them. RST did pay Elliott Attorneys from ABSA 4112241409: 16 payments, R478,957.93, 25 Aug 2025 - 15 Apr 2026. Why Elliott paid RST is not shown.",
+      "withdrawn": "2026-11-19",
+      "source": "evidence/2025-11-14-batch-3/CCE20250911_0007.jpg (+ .md sidecar); financial/statements/2025-09/extracted_data.md; evidence/financial/RST_ABSA_4112241409_ELLIOTT_ATTORNEYS_PAYMENTS_2025-08_2026-04.txt; cogpy/ad-res-j7-cron docs/reports/timeline/REPOSITORY_TIMELINE_DRAFT.md (EVT-073, commit d6c41382); docs/events/EVT-073.md",
+      "banner": "On 11 Sep 2025 RST received R89,836.54 from Elliott Attorneys; it did not pay them about R90,000 (EVT-073, corrected 2026-11-19)."
+    },
+    {
+      "id": "prime-2023-2026-11112748",
+      "pattern": "(?i)11,112,748\\.09|2,822,709\\.10|Prime[^.\\n]{0,40}\\bR11\\.11 ?M\\b|\\bR11\\.11 ?M\\b[^.\\n]{0,15}\\bPrime",
+      "must_match": [
+        "SLG paid Prime R11,112,748.09 in 2023-2026.",
+        "2025: 8 payments, R2,822,709.10.",
+        "SLG paid Prime R11.11M and Proficos R1.91M."
+      ],
+      "must_not_match": [
+        "SLG paid Prime at least R15,274,990.40 in 2023-2026.",
+        "2025: 10 payments, R3,578,119.76.",
+        "Seven of the 2025 payments are from ABSA (R2,821,720.55)."
+      ],
+      "correction": "SLG paid Prime at least R15,274,990.40 in 2023–2026 (2024: 8 payments, R3,504,960.61; 2025: 10 payments, R3,578,119.76). The earlier total left out ABSA cheque statements 3–14. Statements 1, 2 and 8 are not located, so the figure is a floor.",
+      "withdrawn": "2026-11-25",
+      "source": "docs/strategic/SLG_ABSA_PRIME_PAYMENTS_2026_11_25.md",
+      "banner": "SLG's Prime payments 2023–2026 are at least R15,274,990.40, not R11,112,748.09 (ABSA statements 3–14 were left out)."
+    },
+    {
+      "id": "slg-fy2025-prime-unpaid",
+      "pattern": "(?i)neither paid nor booked|FY2025 manufacturer payments\\s*=\\s*R ?0\\b|no payments? to Prime in FY2025|paid Prime nothing in FY2025",
+      "must_match": [
+        "Prime kept manufacturing through FY2025 while SLG neither paid nor booked the liability.",
+        "FY2025 manufacturer payments = R0",
+        "SLG made no payment to Prime in FY2025."
+      ],
+      "must_not_match": [
+        "SLG made no payment to Prime, CJP or Raptor through FNB for 455 days.",
+        "SLG paid Prime R4,140,629.69 from ABSA in FY2025."
+      ],
+      "correction": "In FY2025 SLG paid Prime 8 times, R4,140,629.69, from ABSA 4112315016 (statements located: 3–7, 9–14), and its ledger booked R6,044,986.26 of Prime invoices through supplier control. No payment to Prime runs through FNB between 31 Jan 2024 and 30 Apr 2025; that is true of FNB only.",
+      "withdrawn": "2026-11-25",
+      "source": "docs/strategic/SLG_ABSA_PRIME_PAYMENTS_2026_11_25.md",
+      "banner": "SLG did pay Prime in FY2025: R4,140,629.69 from ABSA, with R6,044,986.26 of Prime invoices booked. \"Nothing paid\" is true of FNB only."
     }
   ]
 }
